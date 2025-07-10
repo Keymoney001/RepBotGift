@@ -62,8 +62,8 @@ function startWebSocket() {
     }
 
     try {
-        // Use consistent app_id (70827 was in your original code)
-        derivWs = new WebSocket('wss://ws.binaryws.com/websockets/v3?app_id=70827');
+        // Use consistent app_id (68848 was in your original code)
+        derivWs = new WebSocket('wss://ws.binaryws.com/websockets/v3?app_id=68848');
         
         derivWs.onopen = function() {
             console.log("✅ WebSocket connection established");
@@ -74,7 +74,7 @@ function startWebSocket() {
             // Authorize using explicit message
             const authRequest = {
                 authorize: "YOUR_TOKEN_HERE", // Optional - replace with actual token if you have one
-                app_id: 70827
+                app_id: 68848
             };
             
             // Wait a moment before sending requests to ensure connection is fully established
@@ -82,7 +82,7 @@ function startWebSocket() {
                 try {
                     if (derivWs && derivWs.readyState === WebSocket.OPEN) {
                         console.log("Sending authorization request");
-                        derivWs.send(JSON.stringify({app_id: 70827}));
+                        derivWs.send(JSON.stringify({app_id: 68848}));
                         requestTickHistory();
                     }
                 } catch (e) {
@@ -526,7 +526,7 @@ function sendAnalysisData(specificStrategy = null) {
     
         // Matches/Differs Analysis
         if (!specificStrategy || specificStrategy === 'matches-differs') {
-            // Find most frequent digit
+            // Find most frequent digit for recommendation
             let maxCount = 0;
             let maxDigit = 0;
             digitCounts.forEach((count, digit) => {
@@ -536,25 +536,37 @@ function sendAnalysisData(specificStrategy = null) {
                 }
             });
         
-            const matchesProbability = (maxCount / totalTicks * 100).toFixed(2);
+            const mostFrequentProbability = (maxCount / totalTicks * 100).toFixed(2);
+
+            // Create digit frequencies map for easy lookup
+            const digitFrequencies = digitCounts.map((count, digit) => ({
+                digit,
+                percentage: (count / totalTicks * 100).toFixed(2),
+                count: count
+            }));
+
+            // Get the current last digit for real-time condition checking
+            const currentLastDigit = tickHistory && tickHistory.length > 0 
+                ? getLastDigit(tickHistory[tickHistory.length - 1].quote)
+                : undefined;
         
             window.postMessage({
                 type: 'ANALYSIS_DATA',
                 strategyId: 'matches-differs',
                 data: {
-                    recommendation: parseFloat(matchesProbability) > 15 ? 'Matches' : 'Differs',
-                    confidence: (parseFloat(matchesProbability) > 15 ? 
-                        parseFloat(matchesProbability) : 
-                        (100 - parseFloat(matchesProbability))).toFixed(2),
+                    recommendation: parseFloat(mostFrequentProbability) > 15 ? 'Matches' : 'Differs',
+                    confidence: (parseFloat(mostFrequentProbability) > 15 ? 
+                        parseFloat(mostFrequentProbability) : 
+                        (100 - parseFloat(mostFrequentProbability))).toFixed(2),
                     target: maxDigit,
-                    digitFrequencies: digitCounts.map((count, digit) => ({
-                        digit,
-                        percentage: (count / totalTicks * 100).toFixed(2)
-                    }))
+                    mostFrequentProbability: mostFrequentProbability,
+                    digitFrequencies: digitFrequencies,
+                    currentLastDigit: currentLastDigit,
+                    totalTicks: totalTicks
                 }
             }, '*');
             
-            console.log(`📊 Matches/Differs analysis sent: Target=${maxDigit}, Probability=${matchesProbability}%`);
+            console.log(`📊 Matches/Differs analysis sent: Target=${maxDigit}, Current=${currentLastDigit}, Probability=${mostFrequentProbability}%`);
         }
 
     } catch (error) {
