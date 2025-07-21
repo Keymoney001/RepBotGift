@@ -17,14 +17,14 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run start -- --port 5004 --host 0.0.0.0"
+args = "npm run start -- --port 5000 --host 0.0.0.0"
 
 [[ports]]
 localPort = 5003
 externalPort = 3000
 
 [[ports]]
-localPort = 5004
+localPort = 5000
 externalPort = 80
 
 [[ports]]
