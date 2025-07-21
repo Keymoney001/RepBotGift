@@ -1,0 +1,568 @@
+> bot@0.0.1 start
+> rsbuild dev --port 5003 --host 0.0.0.0
+
+  Rsbuild v1.0.19
+
+  ➜ Local:    https://localhost:5004/
+  ➜ Network:  https://172.31.128.63:5004/
+  ➜ press h + enter to show shortcuts
+
+start   Building...s in use, using port 5004.
+ready   Built in 5.20 s (web)
+warn    Compile Warning: 
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 787, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:787:36:
+  │ Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  │ Use color.adjust instead.
+  │ 
+  │ More info and automated migrator: https://sass-lang.com/d/import
+  │ 
+  │ 787 |                         background: darken(#4d84ff, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 788:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 787, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:787:36:
+  │ darken() is deprecated. Suggestions:
+  │ 
+  │ color.scale($color, $lightness: -15.3614457831%)
+  │ color.adjust($color, $lightness: -10%)
+  │ 
+  │ More info: https://sass-lang.com/d/color-functions
+  │ 
+  │ 787 |                         background: darken(#4d84ff, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 788:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 797, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:797:36:
+  │ Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  │ Use color.adjust instead.
+  │ 
+  │ More info and automated migrator: https://sass-lang.com/d/import
+  │ 
+  │ 797 |                         background: darken(#ff6b6b, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 798:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 797, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:797:36:
+  │ darken() is deprecated. Suggestions:
+  │ 
+  │ color.scale($color, $lightness: -14.0883977901%)
+  │ color.adjust($color, $lightness: -10%)
+  │ 
+  │ More info: https://sass-lang.com/d/color-functions
+  │ 
+  │ 797 |                         background: darken(#ff6b6b, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 798:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 807, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:807:36:
+  │ Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  │ Use color.adjust instead.
+  │ 
+  │ More info and automated migrator: https://sass-lang.com/d/import
+  │ 
+  │ 807 |                         background: darken(#4caf50, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 808:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 807, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:807:36:
+  │ darken() is deprecated. Suggestions:
+  │ 
+  │ color.scale($color, $lightness: -20.3187250996%)
+  │ color.adjust($color, $lightness: -10%)
+  │ 
+  │ More info: https://sass-lang.com/d/color-functions
+  │ 
+  │ 807 |                         background: darken(#4caf50, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 808:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 817, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:817:36:
+  │ Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  │ Use color.adjust instead.
+  │ 
+  │ More info and automated migrator: https://sass-lang.com/d/import
+  │ 
+  │ 817 |                         background: darken(#ff6b6b, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 818:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 817, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:817:36:
+  │ darken() is deprecated. Suggestions:
+  │ 
+  │ color.scale($color, $lightness: -14.0883977901%)
+  │ color.adjust($color, $lightness: -10%)
+  │ 
+  │ More info: https://sass-lang.com/d/color-functions
+  │ 
+  │ 817 |                         background: darken(#ff6b6b, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 818:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 827, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:827:36:
+  │ Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  │ Use color.adjust instead.
+  │ 
+  │ More info and automated migrator: https://sass-lang.com/d/import
+  │ 
+  │ 827 |                         background: darken(#ff9800, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 828:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 827, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:827:36:
+  │ darken() is deprecated. Suggestions:
+  │ 
+  │ color.scale($color, $lightness: -20%)
+  │ color.adjust($color, $lightness: -10%)
+  │ 
+  │ More info: https://sass-lang.com/d/color-functions
+  │ 
+  │ 827 |                         background: darken(#ff9800, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 828:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: 2 repetitive deprecation warnings omitted.
+  │ Run in verbose mode to see all warnings. (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/bot-builder/quick-strategy/quick-strategy.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 288, column 4 of file:///home/runner/workspace/src/components/shared/styles/_mixins.scss:288:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 288 |     display: flex;
+  │ 
+  │ 
+  │ ../../../../src/components/shared/styles/_mixins.scss 289:5                  flex-center()
+  │ ../../../../src/pages/bot-builder/quick-strategy/quick-strategy.scss 230:17  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/bot-builder/quick-strategy/quick-strategy.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 289, column 4 of file:///home/runner/workspace/src/components/shared/styles/_mixins.scss:289:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 289 |     align-items: $align-items;
+  │ 
+  │ 
+  │ ../../../../src/components/shared/styles/_mixins.scss 290:5                  flex-center()
+  │ ../../../../src/pages/bot-builder/quick-strategy/quick-strategy.scss 230:17  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/bot-builder/quick-strategy/quick-strategy.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 290, column 4 of file:///home/runner/workspace/src/components/shared/styles/_mixins.scss:290:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 290 |     justify-content: $justify-content;
+  │ 
+  │ 
+  │ ../../../../src/components/shared/styles/_mixins.scss 291:5                  flex-center()
+  │ ../../../../src/pages/bot-builder/quick-strategy/quick-strategy.scss 230:17  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 434, column 4 of file:///home/runner/workspace/src/pages/chart/smart-trading-display.scss:434:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 434 |     max-width: 100%;
+  │ 
+  │ 
+  │ ../../../../src/pages/chart/smart-trading-display.scss 435:5  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 434, column 4 of file:///home/runner/workspace/src/pages/chart/smart-trading-display.scss:434:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 434 |     max-width: 100%;
+  │ 
+  │ 
+  │ ../../../../src/pages/chart/smart-trading-display.scss 435:5  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 434, column 4 of file:///home/runner/workspace/src/pages/chart/smart-trading-display.scss:434:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 434 |     max-width: 100%;
+  │ 
+  │ 
+  │ ../../../../src/pages/chart/smart-trading-display.scss 435:5  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 434, column 4 of file:///home/runner/workspace/src/pages/chart/smart-trading-display.scss:434:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 434 |     max-width: 100%;
+  │ 
+  │ 
+  │ ../../../../src/pages/chart/smart-trading-display.scss 435:5  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 434, column 4 of file:///home/runner/workspace/src/pages/chart/smart-trading-display.scss:434:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 434 |     max-width: 100%;
+  │ 
+  │ 
+  │ ../../../../src/pages/chart/smart-trading-display.scss 435:5  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: 3 repetitive deprecation warnings omitted.
+  │ Run in verbose mode to see all warnings. (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+
+> bot@0.0.1 start
+> rsbuild dev --port 5003 --host 0.0.0.0
+
+  Rsbuild v1.0.19
+
+  ➜ Local:    https://localhost:5004/
+  ➜ Network:  https://172.31.128.63:5004/
+  ➜ press h + enter to show shortcuts
+
+info    Port 5003 is in use, using port 5004.
+start   Building...
+ready   Built in 5.20 s (web)
+warn    Compile Warning: 
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 787, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:787:36:
+  │ Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  │ Use color.adjust instead.
+  │ 
+  │ More info and automated migrator: https://sass-lang.com/d/import
+  │ 
+  │ 787 |                         background: darken(#4d84ff, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 788:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 787, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:787:36:
+  │ darken() is deprecated. Suggestions:
+  │ 
+  │ color.scale($color, $lightness: -15.3614457831%)
+  │ color.adjust($color, $lightness: -10%)
+  │ 
+  │ More info: https://sass-lang.com/d/color-functions
+  │ 
+  │ 787 |                         background: darken(#4d84ff, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 788:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 797, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:797:36:
+  │ Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  │ Use color.adjust instead.
+  │ 
+  │ More info and automated migrator: https://sass-lang.com/d/import
+  │ 
+  │ 797 |                         background: darken(#ff6b6b, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 798:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 797, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:797:36:
+  │ darken() is deprecated. Suggestions:
+  │ 
+  │ color.scale($color, $lightness: -14.0883977901%)
+  │ color.adjust($color, $lightness: -10%)
+  │ 
+  │ More info: https://sass-lang.com/d/color-functions
+  │ 
+  │ 797 |                         background: darken(#ff6b6b, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 798:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 807, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:807:36:
+  │ Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  │ Use color.adjust instead.
+  │ 
+  │ More info and automated migrator: https://sass-lang.com/d/import
+  │ 
+  │ 807 |                         background: darken(#4caf50, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 808:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 807, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:807:36:
+  │ darken() is deprecated. Suggestions:
+  │ 
+  │ color.scale($color, $lightness: -20.3187250996%)
+  │ color.adjust($color, $lightness: -10%)
+  │ 
+  │ More info: https://sass-lang.com/d/color-functions
+  │ 
+  │ 807 |                         background: darken(#4caf50, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 808:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 817, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:817:36:
+  │ Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  │ Use color.adjust instead.
+  │ 
+  │ More info and automated migrator: https://sass-lang.com/d/import
+  │ 
+  │ 817 |                         background: darken(#ff6b6b, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 818:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 817, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:817:36:
+  │ darken() is deprecated. Suggestions:
+  │ 
+  │ color.scale($color, $lightness: -14.0883977901%)
+  │ color.adjust($color, $lightness: -10%)
+  │ 
+  │ More info: https://sass-lang.com/d/color-functions
+  │ 
+  │ 817 |                         background: darken(#ff6b6b, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 818:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 827, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:827:36:
+  │ Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  │ Use color.adjust instead.
+  │ 
+  │ More info and automated migrator: https://sass-lang.com/d/import
+  │ 
+  │ 827 |                         background: darken(#ff9800, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 828:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 827, column 36 of file:///home/runner/workspace/src/components/trading-hub/advanced-display.scss:827:36:
+  │ darken() is deprecated. Suggestions:
+  │ 
+  │ color.scale($color, $lightness: -20%)
+  │ color.adjust($color, $lightness: -10%)
+  │ 
+  │ More info: https://sass-lang.com/d/color-functions
+  │ 
+  │ 827 |                         background: darken(#ff9800, 10%);
+  │ 
+  │ 
+  │ ../../../../src/components/trading-hub/advanced-display.scss 828:37  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.scss:1:1
+  ⚠ ModuleWarning: 2 repetitive deprecation warnings omitted.
+  │ Run in verbose mode to see all warnings. (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/bot-builder/quick-strategy/quick-strategy.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 288, column 4 of file:///home/runner/workspace/src/components/shared/styles/_mixins.scss:288:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 288 |     display: flex;
+  │ 
+  │ 
+  │ ../../../../src/components/shared/styles/_mixins.scss 289:5                  flex-center()
+  │ ../../../../src/pages/bot-builder/quick-strategy/quick-strategy.scss 230:17  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/bot-builder/quick-strategy/quick-strategy.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 289, column 4 of file:///home/runner/workspace/src/components/shared/styles/_mixins.scss:289:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 289 |     align-items: $align-items;
+  │ 
+  │ 
+  │ ../../../../src/components/shared/styles/_mixins.scss 290:5                  flex-center()
+  │ ../../../../src/pages/bot-builder/quick-strategy/quick-strategy.scss 230:17  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/bot-builder/quick-strategy/quick-strategy.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 290, column 4 of file:///home/runner/workspace/src/components/shared/styles/_mixins.scss:290:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 290 |     justify-content: $justify-content;
+  │ 
+  │ 
+  │ ../../../../src/components/shared/styles/_mixins.scss 291:5                  flex-center()
+  │ ../../../../src/pages/bot-builder/quick-strategy/quick-strategy.scss 230:17  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 434, column 4 of file:///home/runner/workspace/src/pages/chart/smart-trading-display.scss:434:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 434 |     max-width: 100%;
+  │ 
+  │ 
+  │ ../../../../src/pages/chart/smart-trading-display.scss 435:5  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 434, column 4 of file:///home/runner/workspace/src/pages/chart/smart-trading-display.scss:434:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 434 |     max-width: 100%;
+  │ 
+  │ 
+  │ ../../../../src/pages/chart/smart-trading-display.scss 435:5  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 434, column 4 of file:///home/runner/workspace/src/pages/chart/smart-trading-display.scss:434:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 434 |     max-width: 100%;
+  │ 
+  │ 
+  │ ../../../../src/pages/chart/smart-trading-display.scss 435:5  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 434, column 4 of file:///home/runner/workspace/src/pages/chart/smart-trading-display.scss:434:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 434 |     max-width: 100%;
+  │ 
+  │ 
+  │ ../../../../src/pages/chart/smart-trading-display.scss 435:5  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: Deprecation Warning on line 434, column 4 of file:///home/runner/workspace/src/pages/chart/smart-trading-display.scss:434:4:
+  │ Sass's behavior for declarations that appear after nested
+  │ rules will be changing to match the behavior specified by CSS in an upcoming
+  │ version. To keep the existing behavior, move the declaration above the nested
+  │ rule. To opt into the new behavior, wrap the declaration in `& {}`.
+  │ 
+  │ More info: https://sass-lang.com/d/mixed-decls
+  │ 
+  │ 434 |     max-width: 100%;
+  │ 
+  │ 
+  │ ../../../../src/pages/chart/smart-trading-display.scss 435:5  root stylesheet
+  │  (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
+File: /home/runner/workspace/src/pages/chart/smart-trading-display.scss:1:1
+  ⚠ ModuleWarning: 3 repetitive deprecation warnings omitted.
+  │ Run in verbose mode to see all warnings. (from: /home/runner/workspace/node_modules/@rsbuild/plugin-sass/compiled/sass-loader/index.js??ruleSet[1].rules[10].use[4])
+
