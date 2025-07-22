@@ -529,9 +529,7 @@ const AdvancedDisplay = observer(() => {
         try {
             const contractId = response?.buy?.contract_id;
             const transactionId = response?.buy?.transaction_id;
-            const contractType = response?.buy?.contract_type;
             const stake = response?.buy?.buy_price;
-            const barrier = response?.buy?.barrier;
 
             if (!contractId || !transactionId) {
                 console.error('Invalid trade response - missing contract or transaction ID');
