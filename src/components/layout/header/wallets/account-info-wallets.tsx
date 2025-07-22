@@ -129,19 +129,21 @@ const AccountInfoWallets = observer(({ is_dialog_on, toggleDialog }: TAccountInf
 
     const balance = all_accounts_balance?.accounts?.[loginid ?? '']?.balance;
     const active_account = accounts?.[loginid ?? ''];
-    const linked_dtrade_trading_account_loginid = linked_wallet?.is_virtual
-        ? loginid.replace('VR', 'CR') // Swap VR with CR
-        : loginid.replace('CR', 'VR'); // Swap CR with VR
+    const linked_dtrade_trading_account_loginid = active_account?.is_virtual
+        ? loginid // Keep virtual account ID as is
+        : loginid; // Keep real account ID as is
 
-    const linked_wallet = wallet_list?.find(wallet => wallet.dtrade_loginid === linked_dtrade_trading_account_loginid);
-    const show_badge = linked_wallet?.is_virtual; // Reverse logic for demo and real
+    const linked_wallet = wallet_list?.find(wallet => 
+        active_account?.is_virtual 
+            ? wallet.is_virtual 
+            : !wallet.is_virtual
+    );
+    const show_badge = active_account?.is_virtual; // Show badge for demo accounts
 
-    const displayed_loginid = active_account?.is_virtual
-        ? linked_wallet?.dtrade_loginid // Use the real account ID for demo
-        : linked_wallet?.demo_loginid; // Use the demo account ID for real
+    const displayed_loginid = active_account?.loginid; // Use the actual account ID
 
     const displayed_currency = active_account?.is_virtual
-        ? 'US Dollar' // Display "US Dollar" for demo account
+        ? 'Demo' // Display "Demo" for demo account
         : active_account?.currency; // Use real account currency for real account
 
     return (
