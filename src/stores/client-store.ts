@@ -243,11 +243,6 @@ export default class ClientStore {
             return;
         }
         
-        // Prevent unnecessary updates if balance hasn't changed
-        if (this.balance === balance) {
-            return;
-        }
-        
         // Validate numeric balance
         const numericBalance = parseFloat(balance);
         if (isNaN(numericBalance)) {
@@ -255,7 +250,11 @@ export default class ClientStore {
             return;
         }
         
-        this.balance = balance;
+        // Always update balance for demo accounts to ensure real-time updates
+        if (this.is_virtual || this.balance !== balance) {
+            console.log(`Balance updated from ${this.balance} to ${balance} for ${this.is_virtual ? 'demo' : 'real'} account`);
+            this.balance = balance;
+        }
     };
 
     setCurrency = (currency: string) => {

@@ -950,8 +950,20 @@ const AdvancedDisplay = observer(() => {
                 }
                 return updated;
             });
+
+            // Force balance refresh for demo accounts
+            const { client } = useStore();
+            if (client.is_virtual) {
+                console.log('Refreshing demo balance after contract completion');
+                // Trigger a balance API call to get updated balance
+                setTimeout(() => {
+                    if (window.DerivAPI) {
+                        window.DerivAPI.send({ balance: 1 });
+                    }
+                }, 100);
+            }
         }
-    }, [activeContracts, completedContract, consecutiveLosses, formatMoney, getReadableContractType, globalObserver, setIsRunning, setTotalLosses, setTotalProfit, setTotalWins, showNotification, STORAGE_KEYS.TOTAL_PROFIT, transactions, tradingSettings.takeProfit, tradingSettings.stopLoss, sessionRunId]);
+    }, [activeContracts, completedContract, consecutiveLosses, formatMoney, getReadableContractType, globalObserver, setIsRunning, setTotalLosses, setTotalProfit, setTotalWins, showNotification, STORAGE_KEYS.TOTAL_PROFIT, transactions, tradingSettings.takeProfit, tradingSettings.stopLoss, sessionRunId, useStore]);
 
     // Modified function to start/stop the analysis
     const toggleAnalysis = () => {
@@ -1701,6 +1713,8 @@ const AdvancedDisplay = observer(() => {
                         >
                             Fall
                         </button>
+                    ```text
+
                     </div>
                     <div className='direction-stat fall'>Fall: {directionStats.fall.toFixed(1)}%</div>
                 </div>

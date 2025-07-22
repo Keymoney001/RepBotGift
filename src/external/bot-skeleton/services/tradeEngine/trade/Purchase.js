@@ -176,7 +176,7 @@ export default Engine =>
         regeneratePurchaseReference = () => {
             purchase_reference = getUUID();
         };
-        
+
         // New methods for trade listening
         listenToTrades(callback) {
             if (typeof callback !== 'function') {
