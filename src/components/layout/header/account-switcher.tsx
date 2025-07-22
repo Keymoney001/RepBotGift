@@ -1,1 +1,212 @@
-\nimport React, { useEffect } from 'react';\nimport { lazy, Suspense, useMemo } from 'react';\nimport { observer } from 'mobx-react-lite';\nimport { CurrencyIcon } from '@/components/currency/currency-icon';\nimport { addComma, getDecimalPlaces } from '@/components/shared';\nimport Popover from '@/components/shared_ui/popover';\nimport { api_base } from '@/external/bot-skeleton';\nimport { useOauth2 } from '@/hooks/auth/useOauth2';\nimport { useApiBase } from '@/hooks/useApiBase';\nimport { useStore } from '@/hooks/useStore';\nimport { waitForDomElement } from '@/utils/dom-observer';\nimport { localize } from '@deriv-com/translations';\nimport { AccountSwitcher as UIAccountSwitcher, Loader, useDevice } from '@deriv-com/ui';\nimport DemoAccounts from './common/demo-accounts';\nimport RealAccounts from './common/real-accounts';\nimport { TAccountSwitcher, TAccountSwitcherProps, TModifiedAccount } from './common/types';\nimport { LOW_RISK_COUNTRIES } from './utils';\nimport './account-switcher.scss';\n\nconst AccountInfoWallets = lazy(() => import('./wallets/account-info-wallets'));\n\nconst tabs_labels = {\n    demo: localize('Demo'),\n    real: localize('Real'),\n};\n\nconst RenderAccountItems = ({\n    isVirtual,\n    modifiedCRAccountList,\n    modifiedMFAccountList,\n    modifiedVRTCRAccountList,\n    switchAccount,\n    activeLoginId,\n    client,\n}: TAccountSwitcherProps) => {\n    const { oAuthLogout } = useOauth2({ handleLogout: async () => client.logout(), client });\n    const is_low_risk_country = LOW_RISK_COUNTRIES().includes(client.account_settings?.country_code ?? '');\n    const is_virtual = !!isVirtual;\n\n    useEffect(() => {\n        // Update the max-height from the accordion content set from deriv-com/ui\n        const parent_container = document.getElementsByClassName('account-switcher-panel')?.[0] as HTMLDivElement;\n        if (!isVirtual && parent_container) {\n            parent_container.style.maxHeight = '70vh';\n            waitForDomElement('.deriv-accordion__content', parent_container)?.then((accordionElement: unknown) => {\n                const element = accordionElement as HTMLDivElement;\n                if (element) {\n                    element.style.maxHeight = '70vh';\n                }\n            });\n        }\n    }, [isVirtual]);\n\n    if (is_virtual) {\n        return (\n            <>\n                <DemoAccounts\n                    modifiedVRTCRAccountList={modifiedVRTCRAccountList as TModifiedAccount[]}\n                    switchAccount={switchAccount}\n                    activeLoginId={activeLoginId}\n                    isVirtual={is_virtual}\n                    tabs_labels={tabs_labels}\n                    oAuthLogout={oAuthLogout}\n                    is_logging_out={client.is_logging_out}\n                />\n            </>\n        );\n    } else {\n        return (\n            <RealAccounts\n                modifiedCRAccountList={modifiedCRAccountList as TModifiedAccount[]}\n                modifiedMFAccountList={modifiedMFAccountList as TModifiedAccount[]}\n                switchAccount={switchAccount}\n                isVirtual={is_virtual}\n                tabs_labels={tabs_labels}\n                is_low_risk_country={is_low_risk_country}\n                oAuthLogout={oAuthLogout}\n                loginid={activeLoginId}\n                is_logging_out={client.is_logging_out}\n            />\n        );\n    }\n};\n\nconst AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {\n    const { isDesktop } = useDevice();\n    const { accountList } = useApiBase();\n    const { ui, run_panel, client } = useStore();\n    const { accounts } = client;\n    const { toggleAccountsDialog, is_accounts_switcher_on, account_switcher_disabled_message } = ui;\n    const { is_stop_button_visible } = run_panel;\n    const has_wallet = Object.keys(accounts).some(id => accounts[id].account_category === 'wallet');\n\n    const modifiedAccountList = useMemo(() => {\n        return accountList?.map(account => {\n            let iconName = account?.currency?.toLowerCase();\n\n            // Override icon based on account type\n            if (account?.loginid?.startsWith('VR')) {\n                iconName = 'demo'; // Example: Use 'demo' icon for virtual accounts\n            } else if (account?.loginid?.startsWith('CR')) {\n                iconName = 'real'; // Example: Use 'real' icon for real accounts\n            } else if (account?.loginid?.startsWith('MF')) {\n                iconName = 'mf'; // Example: Use 'mf' icon for MF accounts\n            }\n\n            return {\n                ...account,\n                balance: addComma(\n                    client.all_accounts_balance?.accounts?.[account?.loginid]?.balance?.toFixed(\n                        getDecimalPlaces(account.currency)\n                    ) ?? '0'\n                ),\n                currencyLabel: account?.is_virtual\n                    ? tabs_labels.demo\n                    : (client.website_status?.currencies_config?.[account?.currency]?.name ?? account?.currency),\n                display_loginid: account.loginid, // Use actual loginid\n                icon: (\n                    <CurrencyIcon\n                        currency={account?.currency?.toLowerCase()}\n                        isVirtual={Boolean(account?.loginid?.startsWith('VR'))}\n                    />\n                ),\n                isVirtual: Boolean(account?.is_virtual),\n                isActive: account?.loginid === activeAccount?.loginid,\n            };\n        });\n    }, [\n        accountList,\n        client.all_accounts_balance?.accounts,\n        client.website_status?.currencies_config,\n        activeAccount?.loginid,\n    ]);\n    const modifiedCRAccountList = useMemo(() => {\n        return modifiedAccountList?.filter(account => account?.loginid?.includes('CR')) ?? [];\n    }, [modifiedAccountList]);\n\n    const modifiedMFAccountList = useMemo(() => {\n        return modifiedAccountList?.filter(account => account?.loginid?.includes('MF')) ?? [];\n    }, [modifiedAccountList]);\n\n    const modifiedVRTCRAccountList = useMemo(() => {\n        return modifiedAccountList?.filter(account => account?.loginid?.includes('VRT')) ?? [];\n    }, [modifiedAccountList]);\n\n    const switchAccount = async (loginId: number) => {\n        if (loginId.toString() === activeAccount?.loginid) return;\n        const account_list = JSON.parse(localStorage.getItem('accountsList') ?? '{}');\n        const token = account_list[loginId];\n        if (!token) return;\n        localStorage.setItem('authToken', token);\n        localStorage.setItem('active_loginid', loginId.toString());\n        await api_base?.init(true);\n        const search_params = new URLSearchParams(window.location.search);\n        const selected_account = modifiedAccountList.find(acc => acc.loginid === loginId.toString());\n        if (!selected_account) return;\n        const account_param = selected_account.is_virtual ? 'demo' : selected_account.currency;\n        search_params.set('account', account_param);\n        window.history.pushState({}, '', `${window.location.pathname}?${search_params.toString()}`);\n    };\n\n    return (\n        activeAccount &&\n        (has_wallet ? (\n            <Suspense fallback={<Loader />}>\n                <AccountInfoWallets is_dialog_on={is_accounts_switcher_on} toggleDialog={toggleAccountsDialog} />\n            </Suspense>\n        ) : (\n            <Popover\n                className='run-panel__info'\n                classNameBubble='run-panel__info--bubble'\n                alignment='bottom'\n                message={account_switcher_disabled_message}\n                zIndex='5'\n            >\n                <UIAccountSwitcher\n                    activeAccount={activeAccount}\n                    isDisabled={is_stop_button_visible}\n                    tabsLabels={tabs_labels}\n                    modalContentStyle={{\n                        content: {\n                            top: isDesktop ? '30%' : '50%',\n                            borderRadius: '10px',\n                        },\n                    }}\n                >\n                    <UIAccountSwitcher.Tab title={tabs_labels.real}>\n                        <RenderAccountItems\n                            modifiedCRAccountList={modifiedCRAccountList as TModifiedAccount[]}\n                            modifiedMFAccountList={modifiedMFAccountList as TModifiedAccount[]}\n                            switchAccount={switchAccount}\n                            activeLoginId={activeAccount?.loginid}\n                            client={client}\n                        />\n                    </UIAccountSwitcher.Tab>\n                    <UIAccountSwitcher.Tab title={tabs_labels.demo}>\n                        <RenderAccountItems\n                            modifiedVRTCRAccountList={modifiedVRTCRAccountList as TModifiedAccount[]}\n                            switchAccount={switchAccount}\n                            isVirtual\n                            activeLoginId={activeAccount?.loginid}\n                            client={client}\n                        />\n                    </UIAccountSwitcher.Tab>\n                </UIAccountSwitcher>\n            </Popover>\n        ))\n    );\n});\n\nexport default AccountSwitcher;\n
+
+import React, { useEffect } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
+import { observer } from 'mobx-react-lite';
+import { CurrencyIcon } from '@/components/currency/currency-icon';
+import { addComma, getDecimalPlaces } from '@/components/shared';
+import Popover from '@/components/shared_ui/popover';
+import { api_base } from '@/external/bot-skeleton';
+import { useOauth2 } from '@/hooks/auth/useOauth2';
+import { useApiBase } from '@/hooks/useApiBase';
+import { useStore } from '@/hooks/useStore';
+import { waitForDomElement } from '@/utils/dom-observer';
+import { localize } from '@deriv-com/translations';
+import { AccountSwitcher as UIAccountSwitcher, Loader, useDevice } from '@deriv-com/ui';
+import DemoAccounts from './common/demo-accounts';
+import RealAccounts from './common/real-accounts';
+import { TAccountSwitcher, TAccountSwitcherProps, TModifiedAccount } from './common/types';
+import { LOW_RISK_COUNTRIES } from './utils';
+import './account-switcher.scss';
+
+const AccountInfoWallets = lazy(() => import('./wallets/account-info-wallets'));
+
+const tabs_labels = {
+    demo: localize('Demo'),
+    real: localize('Real'),
+};
+
+const RenderAccountItems = ({
+    isVirtual,
+    modifiedCRAccountList,
+    modifiedMFAccountList,
+    modifiedVRTCRAccountList,
+    switchAccount,
+    activeLoginId,
+    client,
+}: TAccountSwitcherProps) => {
+    const { oAuthLogout } = useOauth2({ handleLogout: async () => client.logout(), client });
+    const is_low_risk_country = LOW_RISK_COUNTRIES().includes(client.account_settings?.country_code ?? '');
+    const is_virtual = !!isVirtual;
+
+    useEffect(() => {
+        // Update the max-height from the accordion content set from deriv-com/ui
+        const parent_container = document.getElementsByClassName('account-switcher-panel')?.[0] as HTMLDivElement;
+        if (!isVirtual && parent_container) {
+            parent_container.style.maxHeight = '70vh';
+            waitForDomElement('.deriv-accordion__content', parent_container)?.then((accordionElement: unknown) => {
+                const element = accordionElement as HTMLDivElement;
+                if (element) {
+                    element.style.maxHeight = '70vh';
+                }
+            });
+        }
+    }, [isVirtual]);
+
+    if (is_virtual) {
+        return (
+            <>
+                <DemoAccounts
+                    modifiedVRTCRAccountList={modifiedVRTCRAccountList as TModifiedAccount[]}
+                    switchAccount={switchAccount}
+                    activeLoginId={activeLoginId}
+                    isVirtual={is_virtual}
+                    tabs_labels={tabs_labels}
+                    oAuthLogout={oAuthLogout}
+                    is_logging_out={client.is_logging_out}
+                />
+            </>
+        );
+    } else {
+        return (
+            <RealAccounts
+                modifiedCRAccountList={modifiedCRAccountList as TModifiedAccount[]}
+                modifiedMFAccountList={modifiedMFAccountList as TModifiedAccount[]}
+                switchAccount={switchAccount}
+                isVirtual={is_virtual}
+                tabs_labels={tabs_labels}
+                is_low_risk_country={is_low_risk_country}
+                oAuthLogout={oAuthLogout}
+                loginid={activeLoginId}
+                is_logging_out={client.is_logging_out}
+            />
+        );
+    }
+};
+
+const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
+    const { isDesktop } = useDevice();
+    const { accountList } = useApiBase();
+    const { ui, run_panel, client } = useStore();
+    const { accounts } = client;
+    const { toggleAccountsDialog, is_accounts_switcher_on, account_switcher_disabled_message } = ui;
+    const { is_stop_button_visible } = run_panel;
+    const has_wallet = Object.keys(accounts).some(id => accounts[id].account_category === 'wallet');
+
+    const modifiedAccountList = useMemo(() => {
+        return accountList?.map(account => {
+            let iconName = account?.currency?.toLowerCase();
+
+            // Override icon based on account type
+            if (account?.loginid?.startsWith('VR')) {
+                iconName = 'demo'; // Example: Use 'demo' icon for virtual accounts
+            } else if (account?.loginid?.startsWith('CR')) {
+                iconName = 'real'; // Example: Use 'real' icon for real accounts
+            } else if (account?.loginid?.startsWith('MF')) {
+                iconName = 'mf'; // Example: Use 'mf' icon for MF accounts
+            }
+
+            return {
+                ...account,
+                balance: addComma(
+                    client.all_accounts_balance?.accounts?.[account?.loginid]?.balance?.toFixed(
+                        getDecimalPlaces(account.currency)
+                    ) ?? '0'
+                ),
+                currencyLabel: account?.is_virtual
+                    ? tabs_labels.demo
+                    : (client.website_status?.currencies_config?.[account?.currency]?.name ?? account?.currency),
+                display_loginid: account.loginid, // Use actual loginid
+                icon: (
+                    <CurrencyIcon
+                        currency={account?.currency?.toLowerCase()}
+                        isVirtual={Boolean(account?.loginid?.startsWith('VR'))}
+                    />
+                ),
+                isVirtual: Boolean(account?.is_virtual),
+                isActive: account?.loginid === activeAccount?.loginid,
+            };
+        });
+    }, [
+        accountList,
+        client.all_accounts_balance?.accounts,
+        client.website_status?.currencies_config,
+        activeAccount?.loginid,
+    ]);
+    const modifiedCRAccountList = useMemo(() => {
+        return modifiedAccountList?.filter(account => account?.loginid?.includes('CR')) ?? [];
+    }, [modifiedAccountList]);
+
+    const modifiedMFAccountList = useMemo(() => {
+        return modifiedAccountList?.filter(account => account?.loginid?.includes('MF')) ?? [];
+    }, [modifiedAccountList]);
+
+    const modifiedVRTCRAccountList = useMemo(() => {
+        return modifiedAccountList?.filter(account => account?.loginid?.includes('VRT')) ?? [];
+    }, [modifiedAccountList]);
+
+    const switchAccount = async (loginId: number) => {
+        if (loginId.toString() === activeAccount?.loginid) return;
+        const account_list = JSON.parse(localStorage.getItem('accountsList') ?? '{}');
+        const token = account_list[loginId];
+        if (!token) return;
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('active_loginid', loginId.toString());
+        await api_base?.init(true);
+        const search_params = new URLSearchParams(window.location.search);
+        const selected_account = modifiedAccountList.find(acc => acc.loginid === loginId.toString());
+        if (!selected_account) return;
+        const account_param = selected_account.is_virtual ? 'demo' : selected_account.currency;
+        search_params.set('account', account_param);
+        window.history.pushState({}, '', `${window.location.pathname}?${search_params.toString()}`);
+    };
+
+    return (
+        activeAccount &&
+        (has_wallet ? (
+            <Suspense fallback={<Loader />}>
+                <AccountInfoWallets is_dialog_on={is_accounts_switcher_on} toggleDialog={toggleAccountsDialog} />
+            </Suspense>
+        ) : (
+            <Popover
+                className='run-panel__info'
+                classNameBubble='run-panel__info--bubble'
+                alignment='bottom'
+                message={account_switcher_disabled_message}
+                zIndex='5'
+            >
+                <UIAccountSwitcher
+                    activeAccount={activeAccount}
+                    isDisabled={is_stop_button_visible}
+                    tabsLabels={tabs_labels}
+                    modalContentStyle={{
+                        content: {
+                            top: isDesktop ? '30%' : '50%',
+                            borderRadius: '10px',
+                        },
+                    }}
+                >
+                    <UIAccountSwitcher.Tab title={tabs_labels.real}>
+                        <RenderAccountItems
+                            modifiedCRAccountList={modifiedCRAccountList as TModifiedAccount[]}
+                            modifiedMFAccountList={modifiedMFAccountList as TModifiedAccount[]}
+                            switchAccount={switchAccount}
+                            activeLoginId={activeAccount?.loginid}
+                            client={client}
+                        />
+                    </UIAccountSwitcher.Tab>
+                    <UIAccountSwitcher.Tab title={tabs_labels.demo}>
+                        <RenderAccountItems
+                            modifiedVRTCRAccountList={modifiedVRTCRAccountList as TModifiedAccount[]}
+                            switchAccount={switchAccount}
+                            isVirtual
+                            activeLoginId={activeAccount?.loginid}
+                            client={client}
+                        />
+                    </UIAccountSwitcher.Tab>
+                </UIAccountSwitcher>
+            </Popover>
+        ))
+    );
+});
+
+export default AccountSwitcher;
