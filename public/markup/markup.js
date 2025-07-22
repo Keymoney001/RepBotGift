@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let filteredRuns = 0;
             
             if (response.app_markup_statistics?.breakdown) {
+                const TARGET_APP_ID = 76083;
                 const appData = response.app_markup_statistics.breakdown.find(app => app.app_id === TARGET_APP_ID);
                 if (appData) {
                     filteredMarkup = appData.app_markup_usd ?? 0;
