@@ -103,49 +103,21 @@ export default class TransactionsStore {
         this.pushTransaction(data);
     }
 
-    // Add throttling for transaction updates
-    private updateThrottle = new Map<string, number>();
-    private readonly THROTTLE_DELAY = 300; // 300ms throttle
-
     pushTransaction(data: TContractInfo) {
         const is_completed = isEnded(data as ProposalOpenContract);
         const { run_id } = this.root_store.run_panel;
         const current_account = this.core?.client?.loginid as string;
 
-        // Throttle updates for incomplete contracts to prevent excessive re-renders
-        if (!is_completed && data.contract_id) {
-            const contractKey = `${current_account}_${data.contract_id}`;
-            const now = Date.now();
-            const lastUpdate = this.updateThrottle.get(contractKey) || 0;
-
-            if (now - lastUpdate < this.THROTTLE_DELAY) {
-                return;
-            }
-
-            this.updateThrottle.set(contractKey, now);
-        }
-
         const contract: TContractInfo = {
             ...data,
             is_completed,
             run_id,
-            // Use existing values if available, otherwise format them
-            date_start: data.date_start || formatDate(data.date_start, 'YYYY-M-D HH:mm:ss [GMT]'),
-            entry_tick: data.entry_tick_display_value || data.entry_tick,
-            entry_tick_time: data.entry_tick_time
-                ? typeof data.entry_tick_time === 'string'
-                    ? data.entry_tick_time
-                    : formatDate(data.entry_tick_time, 'YYYY-M-D HH:mm:ss [GMT]')
-                : undefined,
-            exit_tick: data.exit_tick_display_value || data.exit_tick,
-            exit_tick_time: data.exit_tick_time
-                ? typeof data.exit_tick_time === 'string'
-                    ? data.exit_tick_time
-                    : formatDate(data.exit_tick_time, 'YYYY-M-D HH:mm:ss [GMT]')
-                : undefined,
+            date_start: formatDate(data.date_start, 'YYYY-M-D HH:mm:ss [GMT]'),
+            entry_tick: data.entry_tick_display_value,
+            entry_tick_time: data.entry_tick_time && formatDate(data.entry_tick_time, 'YYYY-M-D HH:mm:ss [GMT]'),
+            exit_tick: data.exit_tick_display_value,
+            exit_tick_time: data.exit_tick_time && formatDate(data.exit_tick_time, 'YYYY-M-D HH:mm:ss [GMT]'),
             profit: is_completed ? data.profit : 0,
-            // Add display parameters to ensure immediate rendering
-            display_name: data.display_name || this.getContractTypeName(data.contract_type),
         };
 
         if (!this.elements[current_account]) {
@@ -197,22 +169,6 @@ export default class TransactionsStore {
         this.elements = { ...this.elements }; // force update
     }
 
-    // Helper to get readable contract type names
-    getContractTypeName(contract_type: string | undefined): string {
-        if (!contract_type) return 'Unknown';
-
-        const contract_types: Record<string, string> = {
-            DIGITDIFF: 'Digit Differs',
-            DIGITOVER: 'Digit Over',
-            DIGITUNDER: 'Digit Under',
-            DIGITEVEN: 'Digit Even',
-            DIGITODD: 'Digit Odd',
-            DIGITMAT: 'Digit Matches',
-        };
-
-        return contract_types[contract_type] || contract_type;
-    }
-
     clear() {
         if (this.elements && this.elements[this.core?.client?.loginid as string]?.length > 0) {
             this.elements[this.core?.client?.loginid as string] = [];
@@ -230,7 +186,6 @@ export default class TransactionsStore {
             () => this.elements[client?.loginid as string],
             elements => {
                 const stored_transactions = getStoredItemsByKey(this.TRANSACTION_CACHE, {});
-                // Preserve original contract IDs and transaction data without modification
                 stored_transactions[client.loginid as string] = elements?.slice(0, 5000) ?? [];
                 setStoredItemsByKey(this.TRANSACTION_CACHE, stored_transactions);
             }
@@ -259,7 +214,6 @@ export default class TransactionsStore {
                 this.recovered_transactions.includes(trx?.contract_id)
             )
                 return;
-            // Preserve original contract_id without any modifications
             this.recoverPendingContractsById(trx.contract_id, contract);
         });
     }

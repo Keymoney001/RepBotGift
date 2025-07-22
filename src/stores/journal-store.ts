@@ -165,10 +165,7 @@ export default class JournalStore {
 
         if (loginid) {
             const current_account = account_list?.find(account => account?.loginid === loginid);
-            // Only set currency if not already provided in extra
-            if (!extra.current_currency) {
-                extra.current_currency = current_account?.is_virtual ? 'Demo' : current_account?.currency;
-            }
+            extra.current_currency = current_account?.is_virtual ? 'Demo' : current_account?.currency;
         } else if (message === LogTypes.WELCOME) {
             return;
         }
