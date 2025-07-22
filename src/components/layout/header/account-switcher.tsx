@@ -95,7 +95,8 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
 
     const modifiedAccountList = useMemo(() => {
         return accountList?.map(account => {
-            const is_virtual = Boolean(account?.is_virtual);
+            // Fix the account type detection - VR accounts are virtual, CR/MF are real
+            const is_virtual = account?.loginid?.startsWith('VR') || Boolean(account?.is_virtual);
             const displayed_currency = is_virtual
                 ? 'Demo' // Set currency to display as "Demo" for virtual accounts
                 : account.currency; // Use actual currency for real accounts
@@ -148,7 +149,9 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
         const search_params = new URLSearchParams(window.location.search);
         const selected_account = modifiedAccountList.find(acc => acc.loginid === loginId.toString());
         if (!selected_account) return;
-        const account_param = selected_account.is_virtual ? 'demo' : selected_account.currency;
+        // Fix account parameter - VR accounts are demo, CR/MF are real
+        const is_demo_account = loginId.toString().startsWith('VR') || selected_account.isVirtual;
+        const account_param = is_demo_account ? 'demo' : selected_account.currency;
         search_params.set('account', account_param);
         window.history.pushState({}, '', `${window.location.pathname}?${search_params.toString()}`);
     };
