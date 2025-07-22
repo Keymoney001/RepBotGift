@@ -24,8 +24,6 @@ const tabs_labels = {
     real: localize('Real'),
 };
 
-
-
 const RenderAccountItems = ({
     isVirtual,
     modifiedCRAccountList,
@@ -95,12 +93,6 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
 
     const modifiedAccountList = useMemo(() => {
         return accountList?.map(account => {
-            // Fix the account type detection - VR accounts are virtual, CR/MF are real
-            const is_virtual = account?.loginid?.startsWith('VR') || Boolean(account?.is_virtual);
-            const displayed_currency = is_virtual
-                ? 'Demo' // Set currency to display as "Demo" for virtual accounts
-                : account.currency; // Use actual currency for real accounts
-            
             return {
                 ...account,
                 balance: addComma(
@@ -108,15 +100,16 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                         getDecimalPlaces(account.currency)
                     ) ?? '0'
                 ),
-                currencyLabel: displayed_currency,
-                display_loginid: account.loginid, // Use actual loginid
+                currencyLabel: account?.is_virtual
+                    ? tabs_labels.demo
+                    : (client.website_status?.currencies_config?.[account?.currency]?.name ?? account?.currency),
                 icon: (
                     <CurrencyIcon
-                        currency={account.currency?.toLowerCase()} // Always use actual currency
-                        isVirtual={is_virtual} // Pass correct virtual flag to icon
+                        currency={account?.currency?.toLowerCase()}
+                        isVirtual={Boolean(account?.is_virtual)}
                     />
                 ),
-                isVirtual: is_virtual, // Use correct virtual flag
+                isVirtual: Boolean(account?.is_virtual),
                 isActive: account?.loginid === activeAccount?.loginid,
             };
         });
@@ -135,7 +128,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
     }, [modifiedAccountList]);
 
     const modifiedVRTCRAccountList = useMemo(() => {
-        return modifiedAccountList?.filter(account => account?.loginid?.includes('VR')) ?? [];
+        return modifiedAccountList?.filter(account => account?.loginid?.includes('VRT')) ?? [];
     }, [modifiedAccountList]);
 
     const switchAccount = async (loginId: number) => {
@@ -149,9 +142,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
         const search_params = new URLSearchParams(window.location.search);
         const selected_account = modifiedAccountList.find(acc => acc.loginid === loginId.toString());
         if (!selected_account) return;
-        // Fix account parameter - VR accounts are demo, CR/MF are real
-        const is_demo_account = loginId.toString().startsWith('VR') || selected_account.isVirtual;
-        const account_param = is_demo_account ? 'demo' : selected_account.currency;
+        const account_param = selected_account.is_virtual ? 'demo' : selected_account.currency;
         search_params.set('account', account_param);
         window.history.pushState({}, '', `${window.location.pathname}?${search_params.toString()}`);
     };
@@ -188,16 +179,15 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                             switchAccount={switchAccount}
                             activeLoginId={activeAccount?.loginid}
                             client={client}
-                            isVirtual={false} // Real tab shows real accounts
                         />
                     </UIAccountSwitcher.Tab>
                     <UIAccountSwitcher.Tab title={tabs_labels.demo}>
                         <RenderAccountItems
                             modifiedVRTCRAccountList={modifiedVRTCRAccountList as TModifiedAccount[]}
                             switchAccount={switchAccount}
+                            isVirtual
                             activeLoginId={activeAccount?.loginid}
                             client={client}
-                            isVirtual={true} // Demo tab shows virtual accounts
                         />
                     </UIAccountSwitcher.Tab>
                 </UIAccountSwitcher>
