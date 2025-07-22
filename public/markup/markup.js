@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const wallet = document.querySelector('.wallet');
 
     // Configuration
-    const TARGET_APP_ID = 70827; // App ID to filter markup statistics
+    const TARGET_APP_ID = 76083; // App ID to filter markup statistics
 
     if (!wallet) {
         console.error("⚠ Wallet element not found. Ensure the element with class 'wallet' exists in the HTML.");
