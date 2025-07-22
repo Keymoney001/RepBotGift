@@ -191,7 +191,9 @@ const AppHeader = observer(() => {
                     <Button
                         tertiary
                         onClick={() => {
-                            window.location.replace('https://oauth.deriv.com/oauth2/authorize?app_id=75771&l=EN&brand=tradecortex');
+                            const { generateOAuthURL } = require('@/components/shared/utils/config/config');
+                            const oauthUrl = generateOAuthURL();
+                            window.location.replace(oauthUrl);
                         }}
                     >
                         <Localize i18n_default_text='Log in' />
