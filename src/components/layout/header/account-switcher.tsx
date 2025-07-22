@@ -112,8 +112,8 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                 display_loginid: account.loginid, // Use actual loginid
                 icon: (
                     <CurrencyIcon
-                        currency={is_virtual ? 'USD' : account.currency?.toLowerCase()}
-                        isVirtual={is_virtual}
+                        currency={account.currency?.toLowerCase()} // Always use actual currency
+                        isVirtual={is_virtual} // Pass correct virtual flag to icon
                     />
                 ),
                 isVirtual: is_virtual, // Use correct virtual flag
