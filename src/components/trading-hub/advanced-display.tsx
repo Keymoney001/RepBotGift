@@ -525,20 +525,35 @@ const AdvancedDisplay = observer(() => {
     };
 
     // Enhance the trade success handler to emit events for Run Panel, mirroring trading-hub-display
-    const handleTradeSuccess = (data: TradeResponse) => {
+    const handleTradeSuccess = useCallback((response: any) => {
         try {
-            if (!data.buy || !data.buy.contract_id) {
-                console.error('Invalid trade success data received:', data);
-                setTradeStatus('error');
-                setTradeMessage('Invalid trade data received');
-                showNotification('Trade failed: Invalid response', 'error');
+            const contractId = response?.buy?.contract_id;
+            const transactionId = response?.buy?.transaction_id;
+            const contractType = response?.buy?.contract_type;
+            const stake = response?.buy?.buy_price;
+            const barrier = response?.buy?.barrier;
+
+            if (!contractId || !transactionId) {
+                console.error('Invalid trade response - missing contract or transaction ID');
                 return;
             }
 
-            const buy = data.buy;
-            const contractId = buy.contract_id;
+            // Additional validation for demo accounts
+            const { client } = useStore();
+            if (client.is_virtual) {
+                const contractIdStr = contractId.toString();
+                if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+                    console.error('Invalid demo contract ID in advanced display:', contractId);
+                    setTradeStatus('error');
+                    setTradeMessage('Invalid contract ID for demo account');
+                    return;
+                }
+                console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+            }
+
+            const buy = response.buy;
             const purchaseTime = Date.now();
-            const stake = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+            const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
             const longcode = buy.longcode;
 
             // --- Start: Extract Symbol from longcode ---
@@ -563,7 +578,7 @@ const AdvancedDisplay = observer(() => {
 
             console.log('Processing trade success:', {
                 contractId: contractId,
-                price: stake,
+                price: stakeFormatted,
                 longcode: buy.longcode,
                 parsedSymbol: parsedSymbol, // Log the symbol being used
             });
@@ -668,7 +683,7 @@ const AdvancedDisplay = observer(() => {
                 shortcode: ``,
                 longcode: buy.longcode,
                 run_id: sessionRunId,
-                buy_price: Number(stake),
+                buy_price: Number(stakeFormatted),
                 currency: buy.currency || 'USD',
                 date_start: Math.floor(purchaseTime / 1000),
                 purchase_time: Math.floor(purchaseTime / 1000),
@@ -706,7 +721,7 @@ const AdvancedDisplay = observer(() => {
             // Now perform other state updates for this component's UI
             setTradeStatus('success');
             setTradeMessage(`Trade successful! Contract ID: ${contractId} - ${buy.longcode}`);
-            showNotification(`Trade placed successfully!`, 'success', `Contract ID: ${contractId} - Amount: $${stake}`);
+            showNotification(`Trade placed successfully!`, 'success', `Contract ID: ${contractId} - Amount: $${stakeFormatted}`);
 
             // Store contract in activeContracts map for internal tracking
             const internalTradeData = {
@@ -725,7 +740,7 @@ const AdvancedDisplay = observer(() => {
             subscribeToContract(contractId, {
                 type: contractType,
                 symbol: parsedSymbol, // Use parsedSymbol here too
-                stake: stake,
+                stake: stakeFormatted,
                 barrier: barrier,
             });
 
@@ -1713,6 +1728,7 @@ const AdvancedDisplay = observer(() => {
                         >
                             Fall
                         </button>
+
                     ```text
 
                     </div>

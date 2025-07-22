@@ -70,6 +70,22 @@ class APIMiddleware {
                 }
                 break;
             }
+            case 'buy': {
+                // Validate contract ID for demo accounts
+                if (this.account_info?.is_virtual && response.buy) {
+                    const contractId = response.buy.contract_id;
+                    const contractIdStr = contractId?.toString();
+                    
+                    if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+                        console.error('Invalid demo contract ID from API:', contractId);
+                        // Don't process invalid contract responses
+                        return;
+                    }
+                    
+                    console.log(`Demo contract validated from API - ID: ${contractId}`);
+                }
+                break;
+            }
             // Add other cases here as needed for other response types
         }
     }

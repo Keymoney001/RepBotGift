@@ -136,6 +136,19 @@ export default Engine =>
 
             const buy = response.buy;
 
+            // Validate contract ID for demo accounts
+            if (this.accountInfo.is_virtual) {
+                const contractIdStr = buy.contract_id.toString();
+                // Demo contract IDs should be valid numbers and match expected format
+                if (!contractIdStr || contractIdStr === 'undefined' || isNaN(buy.contract_id)) {
+                    console.error('Invalid demo contract ID received:', buy.contract_id);
+                    return;
+                }
+                
+                // Additional validation for demo accounts
+                console.log(`Demo contract validated - ID: ${buy.contract_id}, Transaction: ${buy.transaction_id}`);
+            }
+
             contractStatus({
                 id: 'contract.purchase_received',
                 data: buy.transaction_id,

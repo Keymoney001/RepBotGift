@@ -111,17 +111,17 @@ export default class TransactionsStore {
         const is_completed = isEnded(data as ProposalOpenContract);
         const { run_id } = this.root_store.run_panel;
         const current_account = this.core?.client?.loginid as string;
-        
+
         // Throttle updates for incomplete contracts to prevent excessive re-renders
         if (!is_completed && data.contract_id) {
             const contractKey = `${current_account}_${data.contract_id}`;
             const now = Date.now();
             const lastUpdate = this.updateThrottle.get(contractKey) || 0;
-            
+
             if (now - lastUpdate < this.THROTTLE_DELAY) {
                 return;
             }
-            
+
             this.updateThrottle.set(contractKey, now);
         }
 
