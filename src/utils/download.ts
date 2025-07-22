@@ -46,10 +46,6 @@ const getCurrentDateTimeLocale = () => {
     return `${year}-${month}-${day} ${hours}${minutes}${seconds}`;
 };
 
-export const formatMessage = (message: string, extra: TExtra) => {
-    return getSuccessJournalMessage(message, extra);
-};
-
 export const getSuccessJournalMessage = (message: string, extra: TExtra) => {
     const { profit, sold_for, longcode, transaction_id, current_currency } = extra;
     switch (message) {

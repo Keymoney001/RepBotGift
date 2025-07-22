@@ -26,7 +26,6 @@ export default class ClientStore {
     is_landing_company_loaded = false;
     all_accounts_balance: Balance | null = null;
     is_logging_out = false;
-    private balanceRefreshInterval: NodeJS.Timeout | null = null;
 
     // TODO: fix with self exclusion
     updateSelfExclusion = () => {};
@@ -76,9 +75,6 @@ export default class ClientStore {
             is_cr_account: computed,
             account_open_date: computed,
         });
-
-        // Start balance refresh for demo accounts
-        this.startBalanceRefresh();
     }
 
     get active_accounts() {
@@ -228,26 +224,6 @@ export default class ClientStore {
         return this.is_virtual ? this.is_eu_or_multipliers_only : !is_mf && !this.is_options_blocked;
     };
 
-    startBalanceRefresh() {
-        // Only refresh balance for demo accounts more frequently
-        if (this.balanceRefreshInterval) {
-            clearInterval(this.balanceRefreshInterval);
-        }
-
-        this.balanceRefreshInterval = setInterval(() => {
-            if (this.is_virtual && window.DerivAPI) {
-                window.DerivAPI.send({ balance: 1 }).catch(console.error);
-            }
-        }, 2000); // Refresh every 2 seconds for demo accounts
-    }
-
-    stopBalanceRefresh() {
-        if (this.balanceRefreshInterval) {
-            clearInterval(this.balanceRefreshInterval);
-            this.balanceRefreshInterval = null;
-        }
-    }
-
     setLoginId = (loginid: string) => {
         this.loginid = loginid;
     };
@@ -266,19 +242,19 @@ export default class ClientStore {
             console.warn('Invalid balance value received:', balance);
             return;
         }
-
+        
         // Validate numeric balance
         const numericBalance = parseFloat(balance);
         if (isNaN(numericBalance)) {
             console.warn('Non-numeric balance received:', balance);
             return;
         }
-
+        
         // Force update balance for demo accounts to ensure transparency
         // Log all balance changes for audit trail
         const oldBalance = this.balance;
         this.balance = balance;
-
+        
         if (this.is_virtual) {
             console.log(`[DEMO BALANCE UPDATE] ${oldBalance} → ${balance} (${numericBalance >= parseFloat(oldBalance) ? '+' : ''}${(numericBalance - parseFloat(oldBalance)).toFixed(2)})`);
         } else if (oldBalance !== balance) {
