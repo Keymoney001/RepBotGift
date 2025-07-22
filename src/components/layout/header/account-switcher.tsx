@@ -93,6 +93,17 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
 
     const modifiedAccountList = useMemo(() => {
         return accountList?.map(account => {
+            let iconName = account?.currency?.toLowerCase();
+
+            // Override icon based on account type
+            if (account?.loginid?.startsWith('VR')) {
+                iconName = 'demo'; // Example: Use 'demo' icon for virtual accounts
+            } else if (account?.loginid?.startsWith('CR')) {
+                iconName = 'real'; // Example: Use 'real' icon for real accounts
+            } else if (account?.loginid?.startsWith('MF')) {
+                iconName = 'mf'; // Example: Use 'mf' icon for MF accounts
+            }
+
             return {
                 ...account,
                 balance: addComma(
@@ -105,7 +116,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                     : (client.website_status?.currencies_config?.[account?.currency]?.name ?? account?.currency),
                 icon: (
                     <CurrencyIcon
-                        currency={account?.currency?.toLowerCase()}
+                        currency={iconName}
                         isVirtual={Boolean(account?.is_virtual)}
                     />
                 ),
