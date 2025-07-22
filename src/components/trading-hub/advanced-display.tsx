@@ -754,13 +754,26 @@ const AdvancedDisplay = observer(() => {
         }
     };
 
+    // Add a throttling mechanism for contract updates
+    const contractUpdateThrottle = useRef<Map<number, number>>(new Map());
+    const THROTTLE_DELAY = 500; // 500ms throttle
+
     // Enhance the contract update handler to emit events for Run Panel, mirroring trading-hub-display
-    const handleContractUpdate = (contract: any) => {
+    const handleContractUpdate = useCallback((contract: any) => {
         console.log('Handling contract update:', contract);
 
         if (!contract?.contract_id) return;
 
         const contractId = contract.contract_id;
+        const now = Date.now();
+        const lastUpdate = contractUpdateThrottle.current.get(contractId) || 0;
+        
+        // Throttle updates for the same contract to prevent rapid re-renders
+        if (now - lastUpdate < THROTTLE_DELAY && !contract.is_sold) {
+            return;
+        }
+        
+        contractUpdateThrottle.current.set(contractId, now);
 
         // Update internal activeContracts state
         if (contract.status === 'open' || !contract.is_sold) {
@@ -993,7 +1006,7 @@ const AdvancedDisplay = observer(() => {
     };
 
     // Enhanced trade results rendering with better animations and UI
-    const renderFinalTradeResults = () => {
+    const renderFinalTradeResults = useCallback(() => {
         return (
             <>
                 {/* Display latest trade result similar to trading-hub-display */}
@@ -1132,11 +1145,11 @@ const AdvancedDisplay = observer(() => {
         );
     };
 
-    // More aggressive resubscription for active trades with shorter interval
+    // More aggressive resubscription for active trades with controlled interval
     useEffect(() => {
         if (!tradeWs || tradeWs.readyState !== WebSocket.OPEN) return;
 
-        // For any active contracts, check status every second
+        // Reduce frequency to prevent browser hanging
         const statusInterval = setInterval(() => {
             // Get list of active contract IDs
             const activeContractIds = Array.from(activeContracts.keys());
@@ -1144,8 +1157,11 @@ const AdvancedDisplay = observer(() => {
             if (activeContractIds.length > 0) {
                 console.log(`Checking ${activeContractIds.length} active contracts`);
 
-                // Re-subscribe to any active contracts to ensure we get updates
-                activeContractIds.forEach(contractId => {
+                // Limit concurrent contract subscriptions to prevent overload
+                const maxConcurrent = 5;
+                const contractsToCheck = activeContractIds.slice(0, maxConcurrent);
+                
+                contractsToCheck.forEach(contractId => {
                     if (!processedContracts.current.has(contractId)) {
                         tradeWs.send(
                             JSON.stringify({
@@ -1157,9 +1173,15 @@ const AdvancedDisplay = observer(() => {
                     }
                 });
             }
-        }, 1000); // Check every second
+        }, 2000); // Increased to 2 seconds to reduce load
 
-        return () => clearInterval(statusInterval);
+        return () => {
+            clearInterval(statusInterval);
+            // Clean up throttle maps to prevent memory leaks
+            if (contractUpdateThrottle.current.size > 100) {
+                contractUpdateThrottle.current.clear();
+            }
+        };
     }, [tradeWs, activeContracts]);
 
     // Add this function to check and resubscribe to contracts if needed
@@ -1527,6 +1549,16 @@ const AdvancedDisplay = observer(() => {
                     webSocketRefs.current[symbol as SymbolType]?.close();
                 }
             });
+            
+            // Clear memory periodically
+            if (tradeHistory.length > 50) {
+                setTradeHistory(prev => prev.slice(0, 30));
+            }
+            
+            // Clear processed contracts cache if it gets too large
+            if (processedContracts.current.size > 100) {
+                processedContracts.current.clear();
+            }
         };
     }, [activeSymbols, tickCount]);
 

@@ -237,6 +237,24 @@ export default class ClientStore {
     };
 
     setBalance = (balance: string) => {
+        // Validate balance format and prevent invalid updates
+        if (typeof balance !== 'string' || balance === null || balance === undefined) {
+            console.warn('Invalid balance value received:', balance);
+            return;
+        }
+        
+        // Prevent unnecessary updates if balance hasn't changed
+        if (this.balance === balance) {
+            return;
+        }
+        
+        // Validate numeric balance
+        const numericBalance = parseFloat(balance);
+        if (isNaN(numericBalance)) {
+            console.warn('Non-numeric balance received:', balance);
+            return;
+        }
+        
         this.balance = balance;
     };
 
