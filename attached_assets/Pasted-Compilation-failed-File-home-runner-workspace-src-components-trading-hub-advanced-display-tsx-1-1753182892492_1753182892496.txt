@@ -1,0 +1,1150 @@
+Compilation failed
+
+File: /home/runner/workspace/src/components/trading-hub/advanced-display.tsx:1:1
+  × Module build failed:
+  ╰─▶   ×   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:532:1]
+        │  529 │         try {
+        │  530 │             const contractId = response?.buy?.contract_id;
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │      ·                   ──────┬─────
+        │      ·                         ╰── const variable was declared here
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │      ·                                            ──────┬─────
+        │      ·                                                  ╰── cannot reassign
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │      ╰────
+        │   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:532:1]
+        │  529 │         try {
+        │  530 │             const contractId = response?.buy?.contract_id;
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │      ·                   ──────┬─────
+        │      ·                         ╰── const variable was declared here
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │      ·                                                ──────┬─────
+        │      ·                                                      ╰── cannot reassign
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │  598 │             else if (longcode.includes('DIGITOVER')) {
+        │      ╰────
+        │   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:532:1]
+        │  529 │         try {
+        │  530 │             const contractId = response?.buy?.contract_id;
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │      ·                   ──────┬─────
+        │      ·                         ╰── const variable was declared here
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │      ·                                                      ──────┬─────
+        │      ·                                                            ╰── cannot reassign
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │  598 │             else if (longcode.includes('DIGITOVER')) {
+        │  599 │                 contractType = 'DIGITOVER';
+        │      ╰────
+        │   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:532:1]
+        │  529 │         try {
+        │  530 │             const contractId = response?.buy?.contract_id;
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │      ·                   ──────┬─────
+        │      ·                         ╰── const variable was declared here
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │      ·                                                     ──────┬─────
+        │      ·                                                           ╰── cannot reassign
+        │  598 │             else if (longcode.includes('DIGITOVER')) {
+        │  599 │                 contractType = 'DIGITOVER';
+        │  600 │                 const match = longcode.match(/_(\d+)$/); // Barrier is usually at the end for digits
+        │      ╰────
+        │   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:532:1]
+        │  529 │         try {
+        │  530 │             const contractId = response?.buy?.contract_id;
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │      ·                   ──────┬─────
+        │      ·                         ╰── const variable was declared here
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │  598 │             else if (longcode.includes('DIGITOVER')) {
+        │  599 │                 contractType = 'DIGITOVER';
+        │      ·                 ──────┬─────
+        │      ·                       ╰── cannot reassign
+        │  600 │                 const match = longcode.match(/_(\d+)$/); // Barrier is usually at the end for digits
+        │  601 │                 if (match) barrier = match[1];
+        │  602 │             } else if (longcode.includes('DIGITUNDER')) {
+        │      ╰────
+        │   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:534:1]
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │      ·                   ───┬───
+        │      ·                      ╰── const variable was declared here
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │  598 │             else if (longcode.includes('DIGITOVER')) {
+        │  599 │                 contractType = 'DIGITOVER';
+        │  600 │                 const match = longcode.match(/_(\d+)$/); // Barrier is usually at the end for digits
+        │  601 │                 if (match) barrier = match[1];
+        │      ·                            ───┬───
+        │      ·                               ╰── cannot reassign
+        │  602 │             } else if (longcode.includes('DIGITUNDER')) {
+        │  603 │                 contractType = 'DIGITUNDER';
+        │  604 │                 const match = longcode.match(/_(\d+)$/);
+        │      ╰────
+        │   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:532:1]
+        │  529 │         try {
+        │  530 │             const contractId = response?.buy?.contract_id;
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │      ·                   ──────┬─────
+        │      ·                         ╰── const variable was declared here
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │  598 │             else if (longcode.includes('DIGITOVER')) {
+        │  599 │                 contractType = 'DIGITOVER';
+        │  600 │                 const match = longcode.match(/_(\d+)$/); // Barrier is usually at the end for digits
+        │  601 │                 if (match) barrier = match[1];
+        │  602 │             } else if (longcode.includes('DIGITUNDER')) {
+        │  603 │                 contractType = 'DIGITUNDER';
+        │      ·                 ──────┬─────
+        │      ·                       ╰── cannot reassign
+        │  604 │                 const match = longcode.match(/_(\d+)$/);
+        │  605 │                 if (match) barrier = match[1];
+        │  606 │             } else if (longcode.includes('DIGITDIFF')) {
+        │      ╰────
+        │   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:534:1]
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │      ·                   ───┬───
+        │      ·                      ╰── const variable was declared here
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │  598 │             else if (longcode.includes('DIGITOVER')) {
+        │  599 │                 contractType = 'DIGITOVER';
+        │  600 │                 const match = longcode.match(/_(\d+)$/); // Barrier is usually at the end for digits
+        │  601 │                 if (match) barrier = match[1];
+        │  602 │             } else if (longcode.includes('DIGITUNDER')) {
+        │  603 │                 contractType = 'DIGITUNDER';
+        │  604 │                 const match = longcode.match(/_(\d+)$/);
+        │  605 │                 if (match) barrier = match[1];
+        │      ·                            ───┬───
+        │      ·                               ╰── cannot reassign
+        │  606 │             } else if (longcode.includes('DIGITDIFF')) {
+        │  607 │                 contractType = 'DIGITDIFF';
+        │  608 │                 const match = longcode.match(/_(\d+)$/);
+        │      ╰────
+        │   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:532:1]
+        │  529 │         try {
+        │  530 │             const contractId = response?.buy?.contract_id;
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │      ·                   ──────┬─────
+        │      ·                         ╰── const variable was declared here
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │  598 │             else if (longcode.includes('DIGITOVER')) {
+        │  599 │                 contractType = 'DIGITOVER';
+        │  600 │                 const match = longcode.match(/_(\d+)$/); // Barrier is usually at the end for digits
+        │  601 │                 if (match) barrier = match[1];
+        │  602 │             } else if (longcode.includes('DIGITUNDER')) {
+        │  603 │                 contractType = 'DIGITUNDER';
+        │  604 │                 const match = longcode.match(/_(\d+)$/);
+        │  605 │                 if (match) barrier = match[1];
+        │  606 │             } else if (longcode.includes('DIGITDIFF')) {
+        │  607 │                 contractType = 'DIGITDIFF';
+        │      ·                 ──────┬─────
+        │      ·                       ╰── cannot reassign
+        │  608 │                 const match = longcode.match(/_(\d+)$/);
+        │  609 │                 if (match) barrier = match[1];
+        │  610 │             } else if (longcode.includes('DIGITMATCH')) {
+        │      ╰────
+        │   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:534:1]
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │      ·                   ───┬───
+        │      ·                      ╰── const variable was declared here
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │  598 │             else if (longcode.includes('DIGITOVER')) {
+        │  599 │                 contractType = 'DIGITOVER';
+        │  600 │                 const match = longcode.match(/_(\d+)$/); // Barrier is usually at the end for digits
+        │  601 │                 if (match) barrier = match[1];
+        │  602 │             } else if (longcode.includes('DIGITUNDER')) {
+        │  603 │                 contractType = 'DIGITUNDER';
+        │  604 │                 const match = longcode.match(/_(\d+)$/);
+        │  605 │                 if (match) barrier = match[1];
+        │  606 │             } else if (longcode.includes('DIGITDIFF')) {
+        │  607 │                 contractType = 'DIGITDIFF';
+        │  608 │                 const match = longcode.match(/_(\d+)$/);
+        │  609 │                 if (match) barrier = match[1];
+        │      ·                            ───┬───
+        │      ·                               ╰── cannot reassign
+        │  610 │             } else if (longcode.includes('DIGITMATCH')) {
+        │  611 │                 contractType = 'DIGITMATCH';
+        │  612 │                 const match = longcode.match(/_(\d+)$/);
+        │      ╰────
+        │   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:532:1]
+        │  529 │         try {
+        │  530 │             const contractId = response?.buy?.contract_id;
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │      ·                   ──────┬─────
+        │      ·                         ╰── const variable was declared here
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │  598 │             else if (longcode.includes('DIGITOVER')) {
+        │  599 │                 contractType = 'DIGITOVER';
+        │  600 │                 const match = longcode.match(/_(\d+)$/); // Barrier is usually at the end for digits
+        │  601 │                 if (match) barrier = match[1];
+        │  602 │             } else if (longcode.includes('DIGITUNDER')) {
+        │  603 │                 contractType = 'DIGITUNDER';
+        │  604 │                 const match = longcode.match(/_(\d+)$/);
+        │  605 │                 if (match) barrier = match[1];
+        │  606 │             } else if (longcode.includes('DIGITDIFF')) {
+        │  607 │                 contractType = 'DIGITDIFF';
+        │  608 │                 const match = longcode.match(/_(\d+)$/);
+        │  609 │                 if (match) barrier = match[1];
+        │  610 │             } else if (longcode.includes('DIGITMATCH')) {
+        │  611 │                 contractType = 'DIGITMATCH';
+        │      ·                 ──────┬─────
+        │      ·                       ╰── cannot reassign
+        │  612 │                 const match = longcode.match(/_(\d+)$/);
+        │  613 │                 if (match) barrier = match[1];
+        │  614 │             }
+        │      ╰────
+        │   × cannot reassign to a variable declared with `const`
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:534:1]
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │      ·                   ───┬───
+        │      ·                      ╰── const variable was declared here
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │  592 │
+        │  593 │             // --- Start: Improved longcode parsing ---
+        │  594 │             if (longcode.includes('CALL')) contractType = 'CALL';
+        │  595 │             else if (longcode.includes('PUT')) contractType = 'PUT';
+        │  596 │             else if (longcode.includes('DIGITEVEN')) contractType = 'DIGITEVEN';
+        │  597 │             else if (longcode.includes('DIGITODD')) contractType = 'DIGITODD';
+        │  598 │             else if (longcode.includes('DIGITOVER')) {
+        │  599 │                 contractType = 'DIGITOVER';
+        │  600 │                 const match = longcode.match(/_(\d+)$/); // Barrier is usually at the end for digits
+        │  601 │                 if (match) barrier = match[1];
+        │  602 │             } else if (longcode.includes('DIGITUNDER')) {
+        │  603 │                 contractType = 'DIGITUNDER';
+        │  604 │                 const match = longcode.match(/_(\d+)$/);
+        │  605 │                 if (match) barrier = match[1];
+        │  606 │             } else if (longcode.includes('DIGITDIFF')) {
+        │  607 │                 contractType = 'DIGITDIFF';
+        │  608 │                 const match = longcode.match(/_(\d+)$/);
+        │  609 │                 if (match) barrier = match[1];
+        │  610 │             } else if (longcode.includes('DIGITMATCH')) {
+        │  611 │                 contractType = 'DIGITMATCH';
+        │  612 │                 const match = longcode.match(/_(\d+)$/);
+        │  613 │                 if (match) barrier = match[1];
+        │      ·                            ───┬───
+        │      ·                               ╰── cannot reassign
+        │  614 │             }
+        │  615 │             // --- End: Improved longcode parsing ---
+        │      ╰────
+        │   × the name `contractType` is defined multiple times
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:532:1]
+        │  529 │         try {
+        │  530 │             const contractId = response?.buy?.contract_id;
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │      ·                   ──────┬─────
+        │      ·                         ╰── previous definition of `contractType` here
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │      ·                 ──────┬─────
+        │      ·                       ╰── `contractType` redefined here
+        │  588 │             let barrier: string | undefined = undefined;
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │      ╰────
+        │   × the name `barrier` is defined multiple times
+        │      ╭─[/home/runner/workspace/src/components/trading-hub/advanced-display.tsx:534:1]
+        │  531 │             const transactionId = response?.buy?.transaction_id;
+        │  532 │             const contractType = response?.buy?.contract_type;
+        │  533 │             const stake = response?.buy?.buy_price;
+        │  534 │             const barrier = response?.buy?.barrier;
+        │      ·                   ───┬───
+        │      ·                      ╰── previous definition of `barrier` here
+        │  535 │
+        │  536 │             if (!contractId || !transactionId) {
+        │  537 │                 console.error('Invalid trade response - missing contract or transaction ID');
+        │  538 │                 return;
+        │  539 │             }
+        │  540 │
+        │  541 │             // Additional validation for demo accounts
+        │  542 │             const { client } = useStore();
+        │  543 │             if (client.is_virtual) {
+        │  544 │                 const contractIdStr = contractId.toString();
+        │  545 │                 if (!contractIdStr || contractIdStr === 'undefined' || isNaN(contractId)) {
+        │  546 │                     console.error('Invalid demo contract ID in advanced display:', contractId);
+        │  547 │                     setTradeStatus('error');
+        │  548 │                     setTradeMessage('Invalid contract ID for demo account');
+        │  549 │                     return;
+        │  550 │                 }
+        │  551 │                 console.log(`Demo trade validated in advanced display - Contract: ${contractId}`);
+        │  552 │             }
+        │  553 │
+        │  554 │             const buy = response.buy;
+        │  555 │             const purchaseTime = Date.now();
+        │  556 │             const stakeFormatted = Number(parseFloat(String(buy.buy_price)).toFixed(2));
+        │  557 │             const longcode = buy.longcode;
+        │  558 │
+        │  559 │             // --- Start: Extract Symbol from longcode ---
+        │  560 │             let parsedSymbol: SymbolType = 'R_10'; // Default fallback
+        │  561 │             const symbolMatch = longcode.match(/^([^_]+)/); // Match characters from the start until the first underscore
+        │  562 │             if (
+        │  563 │                 symbolMatch &&
+        │  564 │                 ['R_10', 'R_25', 'R_50', 'R_75', 'R_100', '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V'].includes(
+        │  565 │                     symbolMatch[1]
+        │  566 │                 )
+        │  567 │             ) {
+        │  568 │                 parsedSymbol = symbolMatch[1] as SymbolType;
+        │  569 │                 console.log(`Parsed symbol from longcode: ${parsedSymbol}`);
+        │  570 │             } else {
+        │  571 │                 // Fallback to activeTradeSymbol if parsing fails, but log a warning
+        │  572 │                 console.warn(
+        │  573 │                     `Could not parse symbol from longcode: ${longcode}. Falling back to activeTradeSymbol: ${activeTradeSymbol}`
+        │  574 │                 );
+        │  575 │                 parsedSymbol = activeTradeSymbol || 'R_10'; // Use state as fallback
+        │  576 │             }
+        │  577 │             // --- End: Extract Symbol from longcode ---
+        │  578 │
+        │  579 │             console.log('Processing trade success:', {
+        │  580 │                 contractId: contractId,
+        │  581 │                 price: stakeFormatted,
+        │  582 │                 longcode: buy.longcode,
+        │  583 │                 parsedSymbol: parsedSymbol, // Log the symbol being used
+        │  584 │             });
+        │  585 │
+        │  586 │             // Determine contract type, barrier, and derived fields immediately
+        │  587 │             let contractType = 'UNKNOWN';
+        │  588 │             let barrier: string | undefined = undefined;
+        │      ·                 ───┬───
+        │      ·                    ╰── `barrier` redefined here
+        │  589 │             let duration = 1; // Default duration
+        │  590 │             let duration_unit = 't'; // Default duration unit
+        │  591 │             let tick_count = 1; // Default tick count for digit contracts
+        │      ╰────
+        │
+Fix error, click outside, or press Esc to close the overlay.
+
+Disable overlay by setting Rsbuild's dev.client.overlay config to false.
