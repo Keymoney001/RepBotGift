@@ -250,10 +250,15 @@ export default class ClientStore {
             return;
         }
         
-        // Always update balance for demo accounts to ensure real-time updates
-        if (this.is_virtual || this.balance !== balance) {
-            console.log(`Balance updated from ${this.balance} to ${balance} for ${this.is_virtual ? 'demo' : 'real'} account`);
-            this.balance = balance;
+        // Force update balance for demo accounts to ensure transparency
+        // Log all balance changes for audit trail
+        const oldBalance = this.balance;
+        this.balance = balance;
+        
+        if (this.is_virtual) {
+            console.log(`[DEMO BALANCE UPDATE] ${oldBalance} → ${balance} (${numericBalance >= parseFloat(oldBalance) ? '+' : ''}${(numericBalance - parseFloat(oldBalance)).toFixed(2)})`);
+        } else if (oldBalance !== balance) {
+            console.log(`[REAL BALANCE UPDATE] ${oldBalance} → ${balance}`);
         }
     };
 

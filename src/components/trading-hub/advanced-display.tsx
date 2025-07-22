@@ -574,12 +574,30 @@ const AdvancedDisplay = observer(() => {
             }
             // --- End: Extract Symbol from longcode ---
 
-            console.log('Processing trade success:', {
+            // Enhanced audit logging for trade transparency
+            const auditData = {
                 contractId: contractId,
+                transactionId: transactionId,
                 price: stakeFormatted,
                 longcode: buy.longcode,
-                parsedSymbol: parsedSymbol, // Log the symbol being used
-            });
+                parsedSymbol: parsedSymbol,
+                timestamp: new Date().toISOString(),
+                sessionRunId: sessionRunId,
+                accountType: client.is_virtual ? 'DEMO' : 'REAL',
+                currentBalance: client.balance
+            };
+            
+            console.log('[TRADE AUDIT] Processing trade success:', auditData);
+            
+            // Store audit trail in session storage for transparency
+            try {
+                const auditKey = `trade_audit_${sessionRunId}`;
+                const existingAudit = JSON.parse(sessionStorage.getItem(auditKey) || '[]');
+                existingAudit.push(auditData);
+                sessionStorage.setItem(auditKey, JSON.stringify(existingAudit));
+            } catch (error) {
+                console.error('Failed to store audit trail:', error);
+            }
 
             // Determine contract type, barrier, and derived fields immediately
             let contractType = 'UNKNOWN';
@@ -865,7 +883,27 @@ const AdvancedDisplay = observer(() => {
                         exitTime: contract.exit_tick_time * 1000,
                     };
 
-                    console.log('Trade result processed:', result);
+                    // Enhanced audit logging for contract completion
+                    const completionAudit = {
+                        ...result,
+                        completionTime: new Date().toISOString(),
+                        sessionRunId: sessionRunId,
+                        accountType: client.is_virtual ? 'DEMO' : 'REAL',
+                        balanceBeforeCompletion: client.balance,
+                        expectedBalanceChange: result.profit
+                    };
+                    
+                    console.log('[CONTRACT COMPLETION AUDIT]', completionAudit);
+                    
+                    // Store completion audit
+                    try {
+                        const completionKey = `completion_audit_${sessionRunId}`;
+                        const existingCompletions = JSON.parse(sessionStorage.getItem(completionKey) || '[]');
+                        existingCompletions.push(completionAudit);
+                        sessionStorage.setItem(completionKey, JSON.stringify(existingCompletions));
+                    } catch (error) {
+                        console.error('Failed to store completion audit:', error);
+                    }
 
                     setTradeHistory(prevHistory => [result, ...prevHistory.slice(0, 49)]);
 
@@ -964,16 +1002,27 @@ const AdvancedDisplay = observer(() => {
                 return updated;
             });
 
-            // Force balance refresh for demo accounts
+            // Force immediate balance refresh and audit trail for demo accounts
             const { client } = useStore();
             if (client.is_virtual) {
-                console.log('Refreshing demo balance after contract completion');
-                // Trigger a balance API call to get updated balance
-                setTimeout(() => {
+                console.log(`[CONTRACT AUDIT] Contract ${contractId} completed - Profit: ${contract.profit}, Previous Balance: ${client.balance}`);
+                
+                // Immediate balance refresh with audit logging
+                const refreshBalance = async () => {
                     if (window.DerivAPI) {
-                        window.DerivAPI.send({ balance: 1 });
+                        try {
+                            const balanceResponse = await window.DerivAPI.send({ balance: 1 });
+                            console.log(`[BALANCE AUDIT] Post-contract balance: ${balanceResponse.balance?.balance}, Expected change: ${contract.profit}`);
+                        } catch (error) {
+                            console.error('[BALANCE AUDIT ERROR]', error);
+                        }
                     }
-                }, 100);
+                };
+                
+                // Refresh immediately and again after a short delay to catch any async updates
+                refreshBalance();
+                setTimeout(refreshBalance, 500);
+                setTimeout(refreshBalance, 1500);
             }
         }
     }, [activeContracts, completedContract, consecutiveLosses, formatMoney, getReadableContractType, globalObserver, setIsRunning, setTotalLosses, setTotalProfit, setTotalWins, showNotification, STORAGE_KEYS.TOTAL_PROFIT, transactions, tradingSettings.takeProfit, tradingSettings.stopLoss, sessionRunId, useStore]);
