@@ -148,7 +148,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
         const search_params = new URLSearchParams(window.location.search);
         const selected_account = modifiedAccountList.find(acc => acc.loginid === loginId.toString());
         if (!selected_account) return;
-        const account_param = selected_account.is_virtual ? selected_account.currency : 'demo';
+        const account_param = selected_account.is_virtual ? 'demo' : selected_account.currency;
         search_params.set('account', account_param);
         window.history.pushState({}, '', `${window.location.pathname}?${search_params.toString()}`);
     };
@@ -184,7 +184,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                             switchAccount={switchAccount}
                             activeLoginId={activeAccount?.loginid}
                             client={client}
-                            isVirtual={true} // Correct virtual flag for Demo tab
+                            isVirtual={true} // Demo tab shows virtual accounts
                         />
                     </UIAccountSwitcher.Tab>
                     <UIAccountSwitcher.Tab title={tabs_labels.real}>
@@ -194,7 +194,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                             switchAccount={switchAccount}
                             activeLoginId={activeAccount?.loginid}
                             client={client}
-                            isVirtual={false} // Correct virtual flag for Real tab
+                            isVirtual={false} // Real tab shows real accounts
                         />
                     </UIAccountSwitcher.Tab>
                 </UIAccountSwitcher>
