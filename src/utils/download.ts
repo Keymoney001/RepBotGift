@@ -56,9 +56,9 @@ export const getSuccessJournalMessage = (message: string, extra: TExtra) => {
             return localize('Resale of this contract is not offered.');
         }
         case LogTypes.PURCHASE: {
-            const random_middle = Math.floor(Math.random() * 100000).toString().padStart(6, '0');
-            const modified_transaction_id = `1342${random_middle}1`;
-            return localize('Bought: {{longcode}} (ID: {{transaction_id}})', { longcode, transaction_id: modified_transaction_id });
+            // Use actual transaction_id if available, otherwise use a consistent fallback
+            const display_transaction_id = transaction_id || 'N/A';
+            return localize('Bought: {{longcode}} (ID: {{transaction_id}})', { longcode, transaction_id: display_transaction_id });
         }
         case LogTypes.SELL: {
             return localize('Sold for: {{sold_for}}', { sold_for });
