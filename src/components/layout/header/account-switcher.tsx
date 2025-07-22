@@ -181,15 +181,6 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                         },
                     }}
                 >
-                    <UIAccountSwitcher.Tab title={tabs_labels.demo}>
-                        <RenderAccountItems
-                            modifiedVRTCRAccountList={modifiedVRTCRAccountList as TModifiedAccount[]}
-                            switchAccount={switchAccount}
-                            activeLoginId={activeAccount?.loginid}
-                            client={client}
-                            isVirtual={true} // Demo tab shows virtual accounts
-                        />
-                    </UIAccountSwitcher.Tab>
                     <UIAccountSwitcher.Tab title={tabs_labels.real}>
                         <RenderAccountItems
                             modifiedCRAccountList={modifiedCRAccountList as TModifiedAccount[]}
@@ -198,6 +189,15 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                             activeLoginId={activeAccount?.loginid}
                             client={client}
                             isVirtual={false} // Real tab shows real accounts
+                        />
+                    </UIAccountSwitcher.Tab>
+                    <UIAccountSwitcher.Tab title={tabs_labels.demo}>
+                        <RenderAccountItems
+                            modifiedVRTCRAccountList={modifiedVRTCRAccountList as TModifiedAccount[]}
+                            switchAccount={switchAccount}
+                            activeLoginId={activeAccount?.loginid}
+                            client={client}
+                            isVirtual={true} // Demo tab shows virtual accounts
                         />
                     </UIAccountSwitcher.Tab>
                 </UIAccountSwitcher>
