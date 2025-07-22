@@ -586,9 +586,9 @@ const AdvancedDisplay = observer(() => {
                 accountType: client.is_virtual ? 'DEMO' : 'REAL',
                 currentBalance: client.balance
             };
-            
+
             console.log('[TRADE AUDIT] Processing trade success:', auditData);
-            
+
             // Store audit trail in session storage for transparency
             try {
                 const auditKey = `trade_audit_${sessionRunId}`;
@@ -892,9 +892,9 @@ const AdvancedDisplay = observer(() => {
                         balanceBeforeCompletion: client.balance,
                         expectedBalanceChange: result.profit
                     };
-                    
+
                     console.log('[CONTRACT COMPLETION AUDIT]', completionAudit);
-                    
+
                     // Store completion audit
                     try {
                         const completionKey = `completion_audit_${sessionRunId}`;
@@ -1006,7 +1006,7 @@ const AdvancedDisplay = observer(() => {
             const { client } = useStore();
             if (client.is_virtual) {
                 console.log(`[CONTRACT AUDIT] Contract ${contractId} completed - Profit: ${contract.profit}, Previous Balance: ${client.balance}`);
-                
+
                 // Immediate balance refresh with audit logging
                 const refreshBalance = async () => {
                     if (window.DerivAPI) {
@@ -1018,7 +1018,7 @@ const AdvancedDisplay = observer(() => {
                         }
                     }
                 };
-                
+
                 // Refresh immediately and again after a short delay to catch any async updates
                 refreshBalance();
                 setTimeout(refreshBalance, 500);
@@ -1258,26 +1258,36 @@ const AdvancedDisplay = observer(() => {
         };
     }, [tradeWs, activeContracts]);
 
-    // Add this function to check and resubscribe to contracts if needed
+    // Optimized contract checking with memory management
     useEffect(() => {
-        // Skip if no trade websocket or no active contracts
         if (!tradeWs || tradeWs.readyState !== WebSocket.OPEN || activeContracts.size === 0) return;
 
-        // Set up interval to check contracts
-        const checkInterval = setInterval(() => {
-            Array.from(activeContracts.entries()).forEach(([contractId, contractData]) => {
-                console.log(`Checking contract: ${contractId}`, contractData);
+        // Limit contract checking to prevent overload
+        const maxContractsToCheck = 5;
 
-                // Resubscribe to contract
-                tradeWs.send(
-                    JSON.stringify({
-                        proposal_open_contract: 1,
-                        contract_id: contractId,
-                        subscribe: 1,
-                    })
-                );
+        const checkInterval = setInterval(() => {
+            const contractEntries = Array.from(activeContracts.entries()).slice(0, maxContractsToCheck);
+
+            contractEntries.forEach(([contractId, contractData]) => {
+                // Only resubscribe if contract is still active
+                if (!processedContracts.current.has(contractId)) {
+                    tradeWs.send(
+                        JSON.stringify({
+                            proposal_open_contract: 1,
+                            contract_id: contractId,
+                            subscribe: 1,
+                        })
+                    );
+                }
             });
-        }, 5000); // Check every 5 seconds
+
+            // Clean up old contracts to prevent memory buildup
+            if (activeContracts.size > 20) {
+                console.warn('🧹 Too many active contracts, clearing old ones');
+                const recentContracts = contractEntries.slice(-10);
+                setActiveContracts(new Map(recentContracts));
+            }
+        }, 10000); // Increased to 10 seconds to reduce load
 
         return () => clearInterval(checkInterval);
     }, [tradeWs, activeContracts]);
@@ -2235,7 +2245,7 @@ const AdvancedDisplay = observer(() => {
                     {status && (
                         <div
                             className={`advanced-display__status advanced-display__status--${
-                                status.includes('Error') ? 'error' : 'success'
+                               status.includes('Error') ? 'error' : 'success'
                             }`}
                         >
                             {status}

@@ -103,16 +103,16 @@ export default class TransactionsStore {
         this.pushTransaction(data);
     }
 
-    // Add throttling for transaction updates
+    // Reduced throttling for better real-time updates
     private updateThrottle = new Map<string, number>();
-    private readonly THROTTLE_DELAY = 300; // 300ms throttle
+    private readonly THROTTLE_DELAY = 100; // Reduced to 100ms for better responsiveness
 
     pushTransaction(data: TContractInfo) {
         const is_completed = isEnded(data as ProposalOpenContract);
         const { run_id } = this.root_store.run_panel;
         const current_account = this.core?.client?.loginid as string;
 
-        // Throttle updates for incomplete contracts to prevent excessive re-renders
+        // Only throttle incomplete contracts, allow all completed contracts immediately
         if (!is_completed && data.contract_id) {
             const contractKey = `${current_account}_${data.contract_id}`;
             const now = Date.now();
@@ -123,6 +123,16 @@ export default class TransactionsStore {
             }
 
             this.updateThrottle.set(contractKey, now);
+        }
+
+        // Force immediate balance refresh for completed contracts
+        if (is_completed && this.core?.client?.is_virtual) {
+            // Trigger balance update for demo accounts
+            setTimeout(() => {
+                if (window.DerivAPI) {
+                    window.DerivAPI.send({ balance: 1 }).catch(console.error);
+                }
+            }, 100);
         }
 
         const contract: TContractInfo = {

@@ -320,11 +320,32 @@ const SmartTradingDisplay = observer(() => {
         }, 1000); // Update every second        return () => clearInterval(requestAnalysisInterval);
     }, [analysisStrategies, hasSentInitCommands]);
 
-    // Contract tracking and settlement effect
+    // Contract tracking and settlement effect with memory management
     useEffect(() => {
         const session_id = `smartTrading_${Date.now()}`;
         setSessionRunId(session_id);
-        globalObserver.emit('bot.started', session_id); const contractSettlementHandler = (response: any) => {
+        globalObserver.emit('bot.started', session_id);
+
+        // Clear memory periodically to prevent freezing
+        const memoryCleanupInterval = setInterval(() => {
+            // Clean up old processed contracts
+            if (strategyRefsMap.current.processedContracts && strategyRefsMap.current.processedContracts.size > 100) {
+                const contractsArray = Array.from(strategyRefsMap.current.processedContracts);
+                strategyRefsMap.current.processedContracts = new Set(contractsArray.slice(-50));
+                console.log('🧹 Memory cleanup: Cleared old processed contracts');
+            }
+
+            // Clean up contract update throttle
+            if (contractUpdateThrottle.current.size > 50) {
+                contractUpdateThrottle.current.clear();
+                console.log('🧹 Memory cleanup: Cleared contract update throttle');
+            }
+        }, 30000); // Clean up every 30 seconds
+
+        return () => {
+            clearInterval(memoryCleanupInterval);
+        };
+    }, []); const contractSettlementHandler = (response: any) => {
             if (response?.id === 'contract.settled' && response?.data &&
                 lastTradeRef.current?.id !== response.data.contract_id) {
                 const contract_info = response.data;
@@ -444,6 +465,14 @@ const SmartTradingDisplay = observer(() => {
 
         contractUpdateInterval.current = setInterval(async () => {
             if (!activeContractRef.current) return;
+            
+            // Add circuit breaker to prevent excessive API calls
+            const activeContractsCount = Object.keys(activeContractsRef.current).length;
+            if (activeContractsCount > 10) {
+                console.warn('⚠️ Too many active contracts, skipping update to prevent overload');
+                return;
+            }
+
             try {
                 const response = await api_base.api.send({
                     proposal_open_contract: 1,
