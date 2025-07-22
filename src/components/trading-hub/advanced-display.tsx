@@ -767,12 +767,12 @@ const AdvancedDisplay = observer(() => {
         const contractId = contract.contract_id;
         const now = Date.now();
         const lastUpdate = contractUpdateThrottle.current.get(contractId) || 0;
-        
+
         // Throttle updates for the same contract to prevent rapid re-renders
         if (now - lastUpdate < THROTTLE_DELAY && !contract.is_sold) {
             return;
         }
-        
+
         contractUpdateThrottle.current.set(contractId, now);
 
         // Update internal activeContracts state
@@ -951,7 +951,7 @@ const AdvancedDisplay = observer(() => {
                 return updated;
             });
         }
-    };
+    }, [activeContracts, completedContract, consecutiveLosses, formatMoney, getReadableContractType, globalObserver, setIsRunning, setTotalLosses, setTotalProfit, setTotalWins, showNotification, STORAGE_KEYS.TOTAL_PROFIT, transactions, tradingSettings.takeProfit, tradingSettings.stopLoss, sessionRunId]);
 
     // Modified function to start/stop the analysis
     const toggleAnalysis = () => {
@@ -1143,7 +1143,7 @@ const AdvancedDisplay = observer(() => {
                 )}
             </>
         );
-    };
+    }, [activeContracts, classNames, completedContract, formatMoney, getReadableContractType, tradeHistory, totalLosses, totalProfit, totalWins]);
 
     // More aggressive resubscription for active trades with controlled interval
     useEffect(() => {
@@ -1160,7 +1160,7 @@ const AdvancedDisplay = observer(() => {
                 // Limit concurrent contract subscriptions to prevent overload
                 const maxConcurrent = 5;
                 const contractsToCheck = activeContractIds.slice(0, maxConcurrent);
-                
+
                 contractsToCheck.forEach(contractId => {
                     if (!processedContracts.current.has(contractId)) {
                         tradeWs.send(
@@ -1549,12 +1549,12 @@ const AdvancedDisplay = observer(() => {
                     webSocketRefs.current[symbol as SymbolType]?.close();
                 }
             });
-            
+
             // Clear memory periodically
             if (tradeHistory.length > 50) {
                 setTradeHistory(prev => prev.slice(0, 30));
             }
-            
+
             // Clear processed contracts cache if it gets too large
             if (processedContracts.current.size > 100) {
                 processedContracts.current.clear();
@@ -1710,7 +1710,7 @@ const AdvancedDisplay = observer(() => {
                     <div className='parity-buttons'>
                         <button
                             className={`stat-button even-button ${
-                                activeTradeSymbol === symbol && tradeStatus === 'pending' ? 'loading' : ''
+                                activeTradeSymbol === symbol&& tradeStatus === 'pending' ? 'loading' : ''
                             }`}
                             onClick={() => handleEvenTrade(symbol)}
                             disabled={tradeStatus === 'pending'}
