@@ -230,6 +230,7 @@ export default class TransactionsStore {
             () => this.elements[client?.loginid as string],
             elements => {
                 const stored_transactions = getStoredItemsByKey(this.TRANSACTION_CACHE, {});
+                // Preserve original contract IDs and transaction data without modification
                 stored_transactions[client.loginid as string] = elements?.slice(0, 5000) ?? [];
                 setStoredItemsByKey(this.TRANSACTION_CACHE, stored_transactions);
             }
@@ -258,6 +259,7 @@ export default class TransactionsStore {
                 this.recovered_transactions.includes(trx?.contract_id)
             )
                 return;
+            // Preserve original contract_id without any modifications
             this.recoverPendingContractsById(trx.contract_id, contract);
         });
     }

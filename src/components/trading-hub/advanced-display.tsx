@@ -1140,7 +1140,7 @@ const AdvancedDisplay = observer(() => {
                                         <div className='trade-detail'>
                                             <span className='label'>Contract ID:</span>
                                             <span className='value' style={{ fontSize: '12px' }}>
-                                                {contract.contractId}
+                                                {contract.contractId || contract.contract_id || 'N/A'}
                                             </span>
                                         </div>
                                     </div>

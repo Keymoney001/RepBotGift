@@ -1578,9 +1578,9 @@ const SmartTradingDisplay = observer(() => {
                 }));
 
                 const contract_info = {
-                    contract_id: buy.contract_id,
+                    contract_id: buy.contract_id, // Preserve original contract ID from API
                     contract_type: contractType,
-                    transaction_ids: { buy: buy.transaction_id },
+                    transaction_ids: { buy: buy.transaction_id }, // Preserve original transaction ID
                     buy_price: contractParameters.amount,
                     currency: contractParameters.currency,
                     symbol: contractParameters.symbol,
