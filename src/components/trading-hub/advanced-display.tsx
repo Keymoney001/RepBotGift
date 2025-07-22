@@ -767,7 +767,7 @@ const AdvancedDisplay = observer(() => {
             setTradeMessage('Error processing trade response');
             showNotification('Error processing trade', 'error');
         }
-    };
+    }, [activeTradeSymbol, tradeWs, tradingSettings.stake, sessionRunId, globalObserver, transactions, useStore, showNotification, getReadableContractType, subscribeToContract, tradeIdCounter]);
 
     // Add a throttling mechanism for contract updates
     const contractUpdateThrottle = useRef<Map<number, number>>(new Map());
