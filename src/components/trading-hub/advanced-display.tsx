@@ -1968,11 +1968,9 @@ const AdvancedDisplay = observer(() => {
                             <Button
                                 className='auth-modal__login-button'
                                 onClick={() => {
-                                    const app_id = getAppId();
-                                    const oauth_url = 'https://oauth.deriv.com/oauth2/authorize';
-                                    const redirect_uri = encodeURIComponent(`${window.location.origin}/callback`);
-                                    const url = `${oauth_url}?app_id=${app_id}&l=EN&brand=deriv&redirect_uri=${redirect_uri}`;
-                                    window.location.href = url;
+                                    const { generateOAuthURL } = require('@/components/shared/utils/config/config');
+                                    const oauthUrl = generateOAuthURL();
+                                    window.location.href = oauthUrl;
                                 }}
                                 disabled={isAuthLoading}
                             >
