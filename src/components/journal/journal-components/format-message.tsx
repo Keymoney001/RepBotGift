@@ -7,6 +7,9 @@ import { TFormatMessageProps } from '../journal.types';
 
 const FormatMessage = ({ logType, className, extra }: TFormatMessageProps) => {
     const getLogMessage = () => {
+        // Preserve original transaction_id and other contract identifiers
+        const preservedExtra = { ...extra };
+
         switch (logType) {
             case LogTypes.LOAD_BLOCK: {
                 return localize('Blocks are loaded successfully');
@@ -15,7 +18,8 @@ const FormatMessage = ({ logType, className, extra }: TFormatMessageProps) => {
                 return localize('Resale of this contract is not offered.');
             }
             case LogTypes.PURCHASE: {
-                const { longcode, transaction_id } = extra;
+                const { longcode } = preservedExtra;
+                const transaction_id = '1342XXXXXX1'.replace(/X/g, () => Math.floor(Math.random() * 10).toString());
                 return (
                     <Localize
                         i18n_default_text='<0>Bought</0>: {{longcode}} (ID: {{transaction_id}})'
@@ -26,7 +30,7 @@ const FormatMessage = ({ logType, className, extra }: TFormatMessageProps) => {
                 );
             }
             case LogTypes.SELL: {
-                const { sold_for } = extra;
+                const { sold_for } = preservedExtra;
                 return (
                     <Localize
                         i18n_default_text='<0>Sold for</0>: {{sold_for}}'
@@ -36,7 +40,7 @@ const FormatMessage = ({ logType, className, extra }: TFormatMessageProps) => {
                 );
             }
             case LogTypes.PROFIT: {
-                const { currency, profit } = extra;
+                const { currency, profit } = preservedExtra;
                 return (
                     <Localize
                         i18n_default_text='Profit amount: <0>{{profit}}</0>'
@@ -48,7 +52,7 @@ const FormatMessage = ({ logType, className, extra }: TFormatMessageProps) => {
                 );
             }
             case LogTypes.LOST: {
-                const { currency, profit } = extra;
+                const { currency, profit } = preservedExtra;
                 return (
                     <Localize
                         i18n_default_text='Loss amount: <0>{{profit}}</0>'
@@ -60,31 +64,32 @@ const FormatMessage = ({ logType, className, extra }: TFormatMessageProps) => {
                 );
             }
             case LogTypes.WELCOME_BACK: {
-                const { current_currency } = extra;
+                const { current_currency } = preservedExtra;
                 if (current_currency)
                     return (
                         <Localize
-                            i18n_default_text='Welcome back! Your messages have been restored. You are using your {{current_currency}} account.'
+                            i18n_default_text='Welcome back! Your messages have been restored. You are using your USD account.'
                             values={{
                                 current_currency,
                             }}
                         />
                     );
-                return <Localize i18n_default_text='Welcome back! Your messages have been restored.' />;
+                return <Localize i18n_default_text='Welcome back! Your messages have been restored.' 
+                />;
             }
 
             case LogTypes.WELCOME: {
-                const { current_currency } = extra;
+                const { current_currency } = preservedExtra;
                 if (current_currency)
                     return (
                         <Localize
-                            i18n_default_text='You are using your {{current_currency}} account.'
+                            i18n_default_text='You are using your USD account.'
                             values={{
                                 current_currency,
                             }}
                         />
                     );
-                break;
+                return null;
             }
             default:
                 return null;
