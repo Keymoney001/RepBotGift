@@ -268,14 +268,25 @@ const RunPanel = observer(() => {
     }, []);
 
     useEffect(() => {
-        console.log('Transactions statistics updated:', {
-            won_contracts,
-            lost_contracts,
-            total_profit,
-            total_stake,
-            total_payout,
-            number_of_runs
-        });
+        // Throttle console logging to prevent memory issues
+        const logThrottleKey = 'last_stats_log';
+        const lastLogTime = parseInt(sessionStorage.getItem(logThrottleKey) || '0');
+        const now = Date.now();
+        
+        if (now - lastLogTime > 5000) { // Only log every 5 seconds
+            console.log('Statistics updated:', {
+                won_contracts,
+                lost_contracts,
+                total_profit: total_profit?.toFixed(2),
+                number_of_runs
+            });
+            sessionStorage.setItem(logThrottleKey, now.toString());
+        }
+        
+        // Monitor memory usage
+        if (performance.memory && performance.memory.usedJSHeapSize > 100 * 1024 * 1024) { // 100MB
+            console.warn('High memory usage detected:', Math.round(performance.memory.usedJSHeapSize / 1024 / 1024) + 'MB');
+        }
     }, [won_contracts, lost_contracts, total_profit, total_stake, total_payout, number_of_runs]);
 
     const content = (

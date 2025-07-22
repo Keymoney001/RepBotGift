@@ -514,6 +514,12 @@ export default class RunPanelStore {
         // prevent new version update
         const ignore_new_version = new Event('IgnorePWAUpdate');
         document.dispatchEvent(ignore_new_version);
+        
+        // Clear console periodically to prevent memory buildup
+        if (performance.now() % 30000 < 1000) { // Every ~30 seconds
+            console.clear();
+        }
+        
         const { self_exclusion } = this.root_store;
 
         if (self_exclusion.should_bot_run && self_exclusion.run_limit !== -1) {
@@ -683,13 +689,23 @@ export default class RunPanelStore {
     };
 
     unregisterBotListeners = () => {
-        observer.unregisterAll('bot.running');
-        observer.unregisterAll('bot.stop');
-        observer.unregisterAll('bot.click_stop');
-        observer.unregisterAll('bot.trade_again');
-        observer.unregisterAll('contract.status');
-        observer.unregisterAll('bot.contract');
-        observer.unregisterAll('Error');
+        try {
+            observer.unregisterAll('bot.running');
+            observer.unregisterAll('bot.stop');
+            observer.unregisterAll('bot.click_stop');
+            observer.unregisterAll('bot.trade_again');
+            observer.unregisterAll('contract.status');
+            observer.unregisterAll('bot.contract');
+            observer.unregisterAll('Error');
+            observer.unregisterAll('bot.recoverOpenPositionLimitExceeded');
+            
+            // Force garbage collection hint
+            if (window.gc && typeof window.gc === 'function') {
+                window.gc();
+            }
+        } catch (error) {
+            console.warn('Error cleaning up bot listeners:', error);
+        }
     };
 
     setContractStage = (contract_stage: TContractStage) => {
