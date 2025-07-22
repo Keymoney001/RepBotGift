@@ -129,10 +129,23 @@ export const getDebugServiceWorker = () => {
     return false;
 };
 
+export const clearCachedAppId = () => {
+    // Clear any cached app IDs that might override our configuration
+    window.localStorage.removeItem('config.app_id');
+    window.localStorage.removeItem('authToken');
+    window.localStorage.removeItem('accountsList');
+    console.log('Cleared cached app ID and auth data');
+};
+
 export const generateOAuthURL = () => {
     const { getOauthURL } = URLUtils;
+    const app_id = getAppId();
     const oauth_url = getOauthURL();
     const original_url = new URL(oauth_url);
+    
+    // Override app_id in URL with our configured app_id
+    original_url.searchParams.set('app_id', app_id.toString());
+    
     const configured_server_url = (LocalStorageUtils.getValue(LocalStorageConstants.configServerURL) ||
         localStorage.getItem('config.server_url') ||
         original_url.hostname) as string;
