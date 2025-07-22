@@ -3665,6 +3665,6 @@ const SmartTradingDisplay = observer(() => {
             <DebugButton />
         </div>
     );
-};
+});
 
 export default SmartTradingDisplay;
